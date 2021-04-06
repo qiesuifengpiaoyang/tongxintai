@@ -1,0 +1,581 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>五子棋</title>
+    <link rel="stylesheet" href="./layui/css/layui.css" media="all">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        table{display:inline-block;border-collapse:collapse;}
+        td{border:1px solid #eee;width:50px;height:50px;text-align:center;}
+        button,input{cursor:pointer;padding:5px 20px;}
+
+        .left{width:60%;float:left;text-align:center;}
+        .left>p:nth-child(2){margin-top:10px;}
+        .left>p:nth-child(3){margin:10px 0;}
+        .right{width:30%;float:right;margin-right:50px;}
+        .right .msgList{height:500px;overflow-y:scroll;}
+
+        td div{width:90%;height:90%;border-radius:50%;cursor:pointer;margin-left:5%;}
+        .none{background:#eee;}
+        .red{background:red;}
+        .black{background:black;}
+
+        .btn{}
+        .btn>button:first-child{margin-right:20px;}
+
+        .msgList{border:1px solid #eee;border-radius:10px;}
+        .msgList>div{margin:10px;}
+        .msgList>div>p:first-child{color:green;}
+        .msgList>div>p:last-child{color:blue;}
+
+        .setPage{display:flex;align-items:center;justify-content:center;margin-top:20%;}
+        .setPage>button{margin-left:10px;}
+
+        .hallPage{margin:100px;display:flex;flex-wrap:wrap;}
+        .hallPage>button{position:fixed;right:20px;top:20px;}
+        .hallPage>button:nth-child(2){position:fixed;right:150px;top:20px;}
+        .hallPage>div{border-bottom:50px;border-radius:50%;border:1px solid #eee;box-shadow:0 0 5px 10px #f8f8f8;width:200px;height:200px;margin-left:50px;display:flex;flex-direction:column;align-items:center;
+            justify-content:center;}
+        .hallPage>.battle{background:#ffd0d0;}
+        .hallPage>.wait{background:#bebcf6;}
+        .hallPage>div>p:nth-child(2){margin:10px 0;}
+        .hallPage>div>button{margin-top:10px;}
+
+        .roomPage{margin-top:100px;}
+
+        .mine{color:red !important;}
+    </style>
+    <script type="text/javascript" charset="utf-8"  src="//l2dwidget.js.org/lib/L2Dwidget.min.js"></script>
+    <script type="text/javascript" charset="utf-8"  src="//l2dwidget.js.org/lib/L2Dwidget.0.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        window.onload = function(){
+
+            // // 阻止右键菜单弹出
+            // window.oncontextmenu = function(){
+            //     return false;
+            // };
+            //
+            // // 右键点击事件
+            // window.onmousedown = function(e){
+            //     if(e.buttons == 2){
+            //         return false;
+            //     }
+            // };
+            //
+            // // 页面大小变化
+            // var h = window.innerHeight,w=window.innerWidth;
+            // window.onresize = function () {
+            //     if (h!= window.innerHeight||w!=window.innerWidth){
+            //         window.close();
+            //         window.location = "about:blank";
+            //     }
+            // }
+            //
+            // // 阻止 f12 打开控制台
+            // window.onkeydown = function(e){
+            //     if(e.key == 'F12'){
+            //         return false;
+            //     }
+            // };
+        }
+    </script>
+</head>
+<body>
+<div id="app" style="display: none;" :style="{display: 'block'}">
+
+    <!--设置页面-->
+    <div class="setPage" v-if="page==1">
+        <input type="text" v-model="name" maxlength="20" name="name" placeholder="set your nickname" />
+        <button @click="setNikename">确认</button>
+    </div>
+
+    <!--大厅-->
+    <div class="hallPage" v-if="page==2">
+        <button @click="mineRoom">我的房间</button>
+        <button @click="refreshRoom">刷新列表</button>
+        <div v-for="(item,key) in roomList"
+             v-bind:class="{battle: item.step == 1,wait: item.step == 2}">
+            <p>{{item.name}}</p>
+            <p>{{item.step==1?'对战中':'等待加入'}}</p>
+            <p>{{item.create_time}}</p>
+            <button @click="battle(key)" v-if="item.step==2">对战</button>
+            <button @click="watch(key)" v-if="item.step==1">观战</button>
+        </div>
+    </div>
+
+    <!--房间-->
+    <div class="roomPage" v-if="page==3">
+        <div class="left">
+            <!--棋盘-->
+            <table>
+                <tbody>
+                <tr>
+                    <td>line\row</td>
+                    <td v-for="(row,key) in chessboard[0]">{{key}}</td>
+                </tr>
+                <tr v-for="(line,k) in chessboard">
+                    <td>{{k}}</td>
+                    <td v-for="(row,key) in line">
+                        <div
+                                @click="selected(k,key)"
+                                v-bind:class="{ none: row < 1,red: row == 1,black: row == 2}">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--其他操作-->
+            <p v-if="identity==1 || identity==2">我的步数:{{num}}</p>
+            <p>当前步数:{{room.num}}</p>
+            <p v-if="identity==1 || identity==2">我的棋色:{{identity==1&&room.write==1||identity==2&&room.write==2?'红色':'黑色'}}</p>
+            <div class="btn">
+                <button v-if="identity==1 || identity==2" @click="admitDefeat">认输</button>
+                <button v-if="identity==1 || identity==2" @click="draw">和棋</button>
+                <button v-if="identity==1" @click="exchangePlayer">交换棋手</button>
+                <button @click="closeRoom">返回大厅</button>
+            </div>
+        </div>
+        <!--聊天框-->
+        <div class="right">
+            <!--聊天框 - 聊天记录-->
+            <div class="msgList" id="msgList">
+                <div v-for="(item,key) in msgList">
+                    <p v-bind:class="{mine:item.id==client_id}">{{item.name}}    {{item.time}}</p>
+                    <p>{{item.content}}</p>
+                    <p></p>
+                </div>
+            </div>
+            <!--聊天框 - 输入框-->
+            <div class="form">
+                <input maxlength="30" type="text" v-model="msg" />
+                <button @click="submit">提交</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" v-model="rand" />
+</div>
+
+<script src="./jquery.min.js" type="text/javascript"></script>
+<script src="./layui/layui.js"></script>
+<script src="//cdn.jsdelivr.net/npm/vue/dist/vue.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="./web_socket.js"></script>
+<script type="text/javascript" src="./swfobject.js"></script>
+<!--动画-->
+<script>
+    var path = "../live2d-widget-models-master/packages/live2d-widget-model-hijiki/assets/hijiki.model.json";
+    L2Dwidget.init({
+        model : {jsonPath:path},
+        display: {
+            "superSample": 2,
+            "width": 200,
+            "height": 400,
+            "position": "right",
+            "hOffset": 0,
+            "vOffset": 0
+        }
+    });
+</script>
+<!--主体部分-->
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer,
+            $ = layui.jquery;
+
+        var name = parseInt(Math.random() * 10000000), // 用户昵称
+            client_id = '', // 编号
+            webSocket, // 通信链接
+            loginTime, // 登录时间
+            msgList = [], // 消息列表
+            roomList = [], // 房间列表
+            room, // 房间信息
+            page = 1,
+            color, // 棋色
+            line, // 行
+            row, // 列
+            star, // 观战初始
+            selected = '', // 是否更新棋盘
+            identity, // 房间权限
+            step = 0; // 链接状态
+
+        // 连接服务端
+        function connect() {
+            webSocket = new WebSocket("ws://www.fileInARow.com:8181");
+            webSocket.onopen = Open;
+            webSocket.onmessage = Message;
+            webSocket.onclose = function() {
+                step = 0;
+                msgList.push({
+                    name:name,content:'连接关闭，定时重连',time:time()
+                });
+                connect();
+            };
+            webSocket.onerror = function() {
+                step = 0;
+                msgList.push({
+                    name:name,content:'连接出现错误',time:time()
+                });
+            };
+        }
+
+        // connect();
+        // 链接
+        function Open(){
+            // 登录
+            var login_data = '{"type":"login","client_name":"'+name+'"}';
+            msgList.push({
+                name:name,content:'websocket握手成功，发送登录数据',time:time()
+            });
+            step = 1;
+            webSocket.send(login_data);
+        }
+
+        //获取时间
+        function time() {
+            var date = new Date();
+            var curYear = date.getFullYear();
+            var curMonth = date.getMonth() + 1;
+            var curDate = date.getDate();
+            if(curMonth<10){
+                curMonth = '0' + curMonth;
+            }
+            if(curDate<10){
+                curDate = '0' + curDate;
+            }
+            var curHours = date.getHours();
+            var curMinutes = date.getMinutes();
+            var Seconds = date.getSeconds();
+            return curYear + '-' + curMonth + '-' + curDate +' ' + curHours + ':' + curMinutes + ':' + Seconds;
+        }
+
+        // 接收消息
+        function Message(e){
+            var data = JSON.parse(e.data);
+            // console.log(data,'server back');
+            switch(data['type']){
+                // 服务端ping客户端
+                case 'ping':
+                    page=2;
+                    if(client_id == ''){
+                        layer.msg('Login Successful');
+                        loginTime = data.time;
+                        client_id = data.client_id;
+                    }
+                    if(data.close == 1){
+                        layer.msg('房间已关闭');
+                    }
+                    roomList = data.content;
+                    break;
+                // 刷新房间列表
+                case 'refreshRoom':
+                    roomList = data.content;
+                    break;
+                // 进入棋盘
+                case 'room':
+                    msgList = [];
+                    star = 1;
+                    page=3;
+                    room = data.content;
+                    identity = data.identity;
+                    break;
+                // 用户下棋 更新棋盘
+                case 'selected' :
+                    room = data.content,
+                    line = data.line,
+                    row = data.row,
+                    color = data.color,
+                    msgList.push({id:data['id'],name:data['name'], content:data['msg'],time:data['time']}),
+                    selected = 1;
+                    break;
+                case 'star':
+                    webSocket.send('{"type":"star"}');
+                    break;
+                // 对方认输
+                case 'admitDefeat':
+                    if(identity == 1|| identity == 2) {
+                        layer.confirm(data['client_name'] + '申请认输，是否同意？', {
+                            btn: ['同意', '拒绝'],
+                            btn1: function (index) {
+                                webSocket.send('{"type":"refuse","room_id":"' + room.id + '","cls":"认输"}');
+                                layer.close(index);
+                            },
+                            btn2: function (index) {
+                                webSocket.send('{"type":"agree","room_id":"' + room.id + '","cls":"认输"}');
+                                layer.close(index);
+                            },
+                        });
+                    }
+                    break;
+                // 对方申请和棋
+                case 'draw':
+                    if(identity == 1|| identity == 2){
+                        layer.confirm(data['client_name'] + '申请和棋，是否同意？',{
+                            btn : ['同意','拒绝'],
+                            btn1:function(index){
+                                webSocket.send('{"type":"refuse","room_id":"'+room.id+'","cls":"和棋"}');
+                                layer.close(index);
+                            },
+                            btn2:function(index){
+                                webSocket.send('{"type":"agree","room_id":"'+room.id+'","cls":"和棋"}');
+                                layer.close(index);
+                            },
+                        });
+                    }
+                    break;
+                // 对方同意申请
+                case 'agree':
+                    msgList.push({
+                        id:data['id'],name:data['client_name'], msg:data['content'],time:data['time']
+                    });
+                    break;
+                // 对方发送消息
+                case 'msg':
+                    if(data.room){
+                        room = data.room;
+                        star = 1;
+                    }
+                    msgList.push({
+                        id:data['id'],name:data['name'], content:data['content'],time:data['time']
+                    });
+                    break;
+                case 'error':
+                    layer.msg(data['errmsg']);
+                    break;
+                case 'win':
+                    room.step=3;
+                    layer.confirm('你赢得了本场比赛',function(index){
+                        if(identity == 1){
+                            webSocket.send('{"type":"restart","room_id":"'+room.id+'"}');
+                        }
+                        layer.close(index);
+                    })
+                    break;
+                case 'lose':
+                    layer.confirm('你输掉了本场比赛',function(index){
+                        if(identity == 1){
+                            webSocket.send('{"type":"restart","room_id":"'+room.id+'"}');
+                        }
+                        layer.close(index);
+                    })
+                    break;
+            }
+        }
+
+        // 棋盘
+        function chessboard(){
+            return Object.keys(Array.from({length:10})).map(function(item){
+                return Array.from({length:10}, (v,k) => 0);
+            });
+        }
+
+        new Vue({
+            el:'#app',
+            data:{
+                client_id:client_id,
+                page:page,
+                rand:1,
+                step:step,
+                webSocket:'', // socket链接
+                name:'', // 自己名称
+                play:0, // 是否该自己下棋了
+                num:0, // 己方步数
+                nums:0, // 对方步数
+                msg:'', // 发送信息
+                msgList:msgList, // 聊天记录 {name:用户,msg:内容}
+                roomList:roomList, // 房间编号
+                identity:'',
+                chessboard : [], // 棋盘内容
+            },
+            methods:{
+                /*
+                 * 设置用户信息
+                 * 建立通信链接
+                 * 获取大厅房间列表
+                 * 页面跳转至大厅页
+                 * */
+                setNikename(){
+                    if(this.name == ''){
+                        layer.msg('please set your nickname');return false;
+                    }
+                    name = this.name;
+                    connect();
+                    this.set();
+                },
+
+                refreshRoom(){
+                    webSocket.send('{"type":"refreshRoom"}');
+                },
+
+                // 我的房间
+                mineRoom(){
+                    webSocket.send('{"type":"mineRoom","data":"getinto"}');
+                    this.set();
+                },
+
+                // 交换先后手
+                exchangePlayer(){
+                    var _this = this;
+                    layer.confirm('确认交换？将重置棋局',function(index){
+                        webSocket.send('{"type":"exchangePlayer"}');
+                        _this.set();
+                        layer.close(index);
+                    })
+                },
+
+                // 关闭房间
+                closeRoom(){
+                    layer.confirm('关闭房间并退出？',function(index){
+                        webSocket.send('{"type":"closeRoom","room_id":"'+room.id+'"}');
+                        layer.close(index);
+                    })
+                },
+
+                // 加入对战
+                battle(room_id){
+                    layer.confirm('确认加入对战？',function(index){
+                        webSocket.send('{"type":"battle","room_id":"'+room_id+'"}');
+                        layer.close(index);
+                    })
+                },
+
+                // 观战
+                watch(room_id){
+                    layer.confirm('进入房间观战？',function(index){
+                        webSocket.send('{"type":"watch","room_id":"'+room_id+'"}');
+                        layer.close(index);
+                    })
+                },
+
+                // 选中
+                selected(line,row){
+                    if(!this.checkStep()){
+                        return false;
+                    }
+                    if(this.identity!=1 && this.identity!=2){
+                        layer.msg('没有权限');return false;
+                    }
+
+                    if(this.room.step!=1){
+                        layer.msg('棋局未开始');return false;
+                    }
+
+                    if(this.identity==1 && this.room.activity!=1 || this.identity==2 && this.room.activity!=2){
+                        layer.msg('请等待对方下棋');return false;
+                    }
+                    if(this.chessboard[line][row] > 0){
+                        return false;
+                    }
+                    this.num ++;
+                    webSocket.send('{"type":"selected","room_id":"'+this.room.id+'","line":'+line+',"row":'+row+',"time":"'+time()+'"}');
+                },
+
+                // 认输
+                admitDefeat(){
+                    if(!this.checkStep()){
+                        return false;
+                    }
+                    layer.confirm('这么唠,就认输了吗，？',function(index){
+                        webSocket.send('{"type":"admitDefeat","room_id":"'+room.id+'"}');
+                        layer.close(index);
+                    });
+                },
+
+                // 申请和棋
+                draw(){
+                    if(!this.checkStep()){
+                        return false;
+                    }
+                    layer.confirm('和棋，认真的吗，？',function(index){
+                        webSocket.send('{"type":"draw","room_id":"'+room.id+'"}');
+                        layer.close(index);
+                    });
+                },
+
+                // 发送消息
+                submit(){
+                    if(!this.checkStep()){
+                        return false;
+                    }
+                    if(this.msg == ''){
+                        layer.msg('请输入要发送的内容');return false
+                    }
+                    webSocket.send('{"type":"msg","content":"'+this.msg+'","room_id":"'+this.room.id+'"}');
+                    this.msg = '';
+                },
+
+                // 退出房间
+                exit(){},
+
+                // 重置棋盘
+                reset(){
+                    this.chessboard = chessboard();
+                    this.num = 0;
+                    this.nums = 0;
+                },
+
+                set(){
+                    var _this = this;
+                    setInterval(function(){
+                        var table = _this.chessboard;
+                        if(selected == 1){
+                            table[line][row] = color;
+                            selected = '';
+                        }else if(star == 1) {
+                            if (identity == 3) {
+                                table = chessboard();
+                                for (let item in room.history) {
+                                    msgList.push({
+                                        name: room.history[item].name,
+                                        content: '在' + room.history[item].line + '行' + room.history[item].row + '列下了',
+                                        time: room.history[item].time
+                                    }),
+                                        table[room.history[item].line][room.history[item].row] = room.history[item].color;
+                                }
+                            } else {
+                                _this.num = 0;
+                                table = chessboard();
+                            }
+                            star = '';
+                        }
+
+                        _this.chessboard = table;
+                        _this.roomList = roomList;
+                        _this.msgList = msgList;
+                        _this.room = room;
+                        _this.identity = identity;
+                        _this.client_id = client_id;
+                        _this.page = page;
+                        _this.rand++;
+
+                        if(page == 3){
+                            var div = document.getElementById('msgList');
+                            div.scrollTop = div.scrollHeight;
+                        }
+
+                        // 保持心跳
+                        webSocket.send('{"type":"heartbeat"}');
+                    },200);
+                },
+
+                // 链接状态判断
+                checkStep(){
+                    if(room.step == 2){
+                        layer.msg('对战未开始');return false;
+                    }
+                    if(room.step == 3){
+                        layer.msg('对战已结束，等待重新开始');return false;
+                    }
+                    return true;
+                }
+            },
+            created(){
+                this.chessboard = chessboard();
+            }
+        })
+    });
+</script>
+</body>
+</html>

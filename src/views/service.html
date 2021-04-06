@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /*清除浮动代码*/
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .clearfix {
+            zoom: 1
+        }
+
+        /*移动端。大概，也可以写在html{}中*/
+        * {
+            /* -webkit-text-size-adjust: none; */
+        }
+
+        #app {
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top {
+            width: 100%;
+            height: 40px;
+            background-color: #0abaff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 1rem;
+            padding: 0 20px;
+        }
+
+        .top-name {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-name img {
+            width: 25px;
+            height: 25px;
+            display: inline-block;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        /*主体部分*/
+        .subject {
+            display: flex;
+            max-height: calc(100vh - 40px)
+        }
+
+        /*左侧的导航栏*/
+        .navigation {
+            width: 50px;
+            background-image: linear-gradient(#1f05b6, #2629d1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .navigation>li {
+            margin-top: 30px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .navigation>li::before {
+            display: block;
+            content: '';
+            position: absolute;
+            top: 12%;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-width: 8px 10px;
+            border-style: solid;
+            border-color: transparent #fff transparent transparent;
+        }
+
+        /* 右侧——消息——名单列表 */
+        .information {
+            flex-grow: 1;
+            background-color: yellow;
+            padding: 20px;
+            display: flex;
+        }
+
+        .information-left {
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .information-left>ul {
+            border: 1px solid #aaa;
+            overflow: auto;
+        }
+
+        .information-left li {
+            padding: 5px 8px;
+            font-size: 14px;
+            color: rgb(0, 103, 221);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 在线访客 */
+        .visitor {
+            height: 70%;
+        }
+
+        /* 工作人员 */
+        .information-left>.staff {
+            flex-grow: 1;
+            border-top: none;
+        }
+
+        .subtitle {
+            text-align: center;
+            line-height: 2rem;
+            border-bottom: 2px solid #8cf700;
+        }
+
+        /* 右侧——消息——消息回复 */
+        .information-right {
+            flex-grow: 1;
+            background-color: salmon;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="top">
+            <span>
+                客服中心
+            </span>
+            <div class="top-name">
+                <img src="https://img0.baidu.com/it/u=3101694723,748884042&fm=26&fmt=auto&gp=0.jpg" alt="">
+                <span>客服名字</span>
+            </div>
+        </div>
+        <div class="subject">
+            <!-- 左侧的导航栏 -->
+            <ul class="navigation">
+                <li>消</li>
+                <li>设</li>
+                <li>日</li>
+            </ul>
+            <!-- 消息 -->
+            <div class="information">
+                <div class="information-left">
+                    <!-- 在线访客 -->
+                    <ul class="visitor">
+                        <div class="subtitle">
+                            在线访客
+                        </div>
+                        <li>阿萨大阿萨大阿萨大阿萨大阿萨大阿萨大阿萨大阿萨大阿萨大阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                    </ul>
+                    <!-- 工作人员 -->
+                    <ul class="staff">
+                        <div class="subtitle">
+                            在线工作人员
+                        </div>
+
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                        <li>阿萨大</li>
+                    </ul>
+                </div>
+                <div class="information-right">
+
+                </div>
+            </div>
+            <!-- 设置 -->
+            <div class="setting">
+
+            </div>
+            <!-- 日志 -->
+            <div class="log">
+
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script src="//cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/vue/dist/vue.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+<script>
+    window.onload = function () {
+        var connection = ''
+            , step = 0
+            , read_record = []
+            , msglist = []
+            , userlist = []
+            , userinfo = []
+            , login_msg = {};
+
+        new Vue({
+            el: '#app',
+            data: {
+                accept: 'aaaaaa',
+                pwd: '111111',
+                adminInfo: { id: 1, type_id: 1 },
+                userlist: userlist,
+                uid: '',
+                userlist: userlist,
+                conversationUser: 1,
+                type_id: 1,
+                userinfo: userinfo,
+                content: '',
+                msglist: msglist
+            },
+            methods: {
+
+            }
+        })
+    }
+</script>
+
+</html>
