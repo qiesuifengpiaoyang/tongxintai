@@ -71,6 +71,7 @@ export default {
     },
   },
   mounted() {
+    console.log('测试信息');
     this.captcha_code_img_fn();
   },
 

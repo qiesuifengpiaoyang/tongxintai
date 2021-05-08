@@ -28,16 +28,17 @@
       <!-- <van-cell icon="orders-o" title="收款列表" is-link to="collist"/> -->
       <van-cell icon="friends-o" title="我的好友" is-link to="myfriend" />
       <van-cell icon="chat-o" title="互帮中心" is-link to="helpCenter" />
-      <van-cell icon="friends-o" title="销售加盟商" is-link to="myTeam" />
-      <!-- <van-cell icon="delete" title="清除缓存" is-link @click="delcache"/> -->
+      <!--21-5-8修改，暂时取消销售加盟商-->
+      <!-- <van-cell icon="friends-o" title="消费代理商" is-link to="myTeam" /> -->
       <van-cell icon="phone-circle-o" title="联系我们" is-link to="contactus" />
-      <!-- <van-cell icon="phone-circle-o" title="客服聊天" is-link to="chat" /> -->
-      <van-cell
+      <!-- <van-cell icon="phone-circle-o" title="客服聊天" is-link to="chat" /> --><!--废弃-->
+      <!-- 21-5-8修改，暂时不上线客服系统 -->
+      <!-- <van-cell
         icon="phone-circle-o"
         title="客服聊天"
         is-link
         @click="urlBtn"
-      />
+      /> -->
       <van-cell icon="phone-circle-o" title="收货地址" is-link to="addresses" />
     </div>
     <div class="exit-btn" @click="logout">退出登录</div>
@@ -88,9 +89,10 @@ export default {
     },
     //跳转客服
     urlBtn() {
-      window.location.href = `http://fiveinarow.yuangs.com/index.html#/chat/${sessionStorage.getItem(
+      //http://8.136.118.229/#/chat/1/%E5%BC%A0%E4%B8%89/11111111111
+      window.location.href = `http://8.136.118.229/#/chat/${sessionStorage.getItem(
         "user_id"
-      )}/${sessionStorage.getItem("name")}/${sessionStorage.getItem('mobile')}`;
+      )}/${sessionStorage.getItem("name")}/${sessionStorage.getItem("mobile")}`;
     },
     //收货地址
     shdz() {
@@ -116,9 +118,6 @@ export default {
     },
     myEarnCl() {
       this.show = !this.show;
-    },
-    delcache() {
-      this.$toast("缓存清理完成");
     },
     logout: function () {
       const exit1 = this.$dialog

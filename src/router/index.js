@@ -177,16 +177,16 @@ const routes = [
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/* webpackChunkName: "payInfod" */ '../views/payInfod.vue')
   }
-  // 医互帮详情
+  // 康养帮详情
   ,
   {
-    // 医互帮详情
+    // 康养帮详情
     path: '/helpDetail',
     name: 'helpDetail', // 1
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/* webpackChunkName: "helpDetail" */ '../views/helpdetail.vue')
   }
-  // 医互帮详情
+  // 康养帮详情
   ,
   {
     //互帮申请
@@ -203,7 +203,7 @@ const routes = [
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/* webpackChunkName: "urgency" */ '../views/urgency.vue')
   }
-  // 医互帮中心
+  // 康养帮中心
   ,
   {
     path: '/helpCenter',
@@ -396,22 +396,22 @@ const routes = [
     component: () => import(/*webpackChunkName: "iconsss" */ '../views/iconsss.vue')
   },
   {
-    path:'/addresses',
-    name:'addresses',
+    path: '/addresses',
+    name: 'addresses',
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/*webpackChunkName: "addresses" */ '../views/addresses.vue')
   },
   {
     //聊天系统
-    path:'/chat',
-    name:'chat',
+    path: '/chat',
+    name: 'chat',
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/*webpackChunkName: "chat" */ '../views/chat.vue')
   },
   {
     //历史记录
-    path:'/history/:type_id',
-    name:'history',
+    path: '/history/:type_id',
+    name: 'history',
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/*webpackChunkName: "history" */ '../views/history.vue')
   }
@@ -431,18 +431,26 @@ function is_weixn() {
   }
 };
 router.beforeEach((to, from, next) => {
-  // to.matched.some(record => console.log(record, '同心台——record，路由'))
-  // console.log(encodeURI(to.fullPath), '在一开始输出');
   if (to.fullPath.indexOf('/dx/') != -1 && to.fullPath.indexOf('?') == -1) {
     // window.location.href = to.fullPath;
+    console.log(to, 'to');
+    console.log(to.fullPath, 'to.fullPath');
     let url = window.location.href; //获取网址的hash值
     let site = url.split('=')[1];//获取=后面的
     let _site = site.replace(/%2F/g, '/');//替换字符串
-    let _siteT = _site.substr(1);//删除第一个/
-    // console.log(site, '=号后面的');
-    // console.log(_site, '替换字符串');
-    // console.log(_siteT, '删除第一个/字符');
-    window.location.href = _siteT;//地址跳转
+    console.log(url, 'url');
+    console.log(site, 'site=等号后面的');
+    console.log(_site, '替换字符串后');
+    console.log(_site, '_site');
+    // let _siteT = _site.substr(1);//删除第一个
+    /**
+     * 这里错了
+     * 不是多了个/
+     * 而是少了一个#
+     */
+    // window.location.href = `${window.location.protocol}//${window.location.host}/dx/${_siteT}`;//地址跳转
+    console.log(`${_site.slice(0, 4)} + '#/' + ${_site.slice(4)}`,'修改后的');
+    window.location.href = `${_site.slice(0, 4)}` + '#/' +`${_site.slice(4)}`
     return;
   } else if (to.matched.some(record => record.meta.wxt) && is_weixn()) {
 

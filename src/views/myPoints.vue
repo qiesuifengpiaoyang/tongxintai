@@ -47,7 +47,7 @@
       position="top"
       class="cellradiolist"
     >
-    <van-cell title="兑换原始积分" size="large" />
+      <van-cell title="兑换原始积分" size="large" />
       <van-field
         v-model="text"
         :placeholder="'请输入兑换积分，比例' + integral + ':' + pointz"
@@ -67,7 +67,7 @@ export default {
     return {
       income: [],
       outcome: [],
-      points: 0,//推广积分
+      points: 0, //推广积分
       pageshow: false,
       show: false,
       active: 0,
@@ -87,8 +87,8 @@ export default {
       this.pointz = info.point;
     });
   },
-    components: {
-    popup
+  components: {
+    popup,
   },
   mounted() {
     this.onLoad();
@@ -154,15 +154,15 @@ export default {
         .get(`${this.apiUrl}/getPointLog`)
         .then((res) => {
           let { data } = res;
-          toast1.clear();
-          if (data.status === 1) {
+          if (data.status == 1) {
             that.pageshow = true;
+            // income outcome point
             let { outcome, income, point } = data.info;
             that.points = point;
             that.income = income;
             that.outcome = outcome;
           } else {
-            that.$toast(that.message);
+            that.$toast(res.message);
           }
           toast1.clear();
         })

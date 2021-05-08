@@ -39,21 +39,22 @@
           </van-field>-->
         </van-cell-group>
       </van-cell-group>
-      <div class="re-txt">
+      <!-- <div class="re-txt">
         <p>充值金额</p>
         <p>建议您充值120元以上，避免频繁充值。</p>
-      </div>
-      <div class="convention" v-if="yhb">
-        <span @click="yhbgy">《医护帮公约》参与者必读</span>
+      </div> -->
+      <div class="convention" v-if="treaty">
+        <span @click="yhbgy">《康养帮公约》参与者必读</span>
       </div>
       <van-notice-bar
         class="tipsd"
         :scrollable="false"
         :wrapable="true"
         left-icon="volume-o"
-        text="医互帮和老互帮必须要一起充值才能够享受其中一项"
+        text="康养帮和老互帮必须要一起充值才能够享受其中一项"
       />
-      <!-- <p class="tipsd">医互帮和老互帮必须要一起充值才能够享受其中一项</p> -->
+      <!-- <p class="tipsd">康养帮和老互帮必须要一起充值才能够享受其中一项</p> -->
+      {{ diji }}
       <ul class="re-list">
         <li v-for="(val, key, index) in colyue[diji]" :key="key">
           <div
@@ -137,8 +138,8 @@ export default {
       passwordBoxState: false, //【登陆密码验证】弹窗
       password: "", //验证登录密码
       mangl: "", //自定义充值金额
-      yhb: false, //医护帮
-      diji: 1,
+      treaty: false, //医护帮
+      diji: parseInt(this.$route.query.type) || 1,
       // jjb: false,//紧急帮
       jr: false,
       // cs: false,
@@ -166,12 +167,14 @@ export default {
       apiUrl: this.$store.state.apiDomain,
       staticUrl: this.$store.state.staticDomain,
       toast1: "",
+      rtype: this.$route.query.type,
     };
   },
   components: {
     TypePay,
-    popup
+    popup,
   },
+  created() {},
   mounted() {
     if (this.$route.query.fr === "applyhelp") {
       this.sess_carid = sessionStorage.getItem("card_id");
@@ -248,47 +251,55 @@ export default {
           that.$toast(ehelp.data.message);
         }
         if (getChargeMoney.data.status === 1) {
+          that.colyue = getChargeMoney.data.info;
+          let diji = parseInt(this.$route.query.type);
+          if (that.colyue.hasOwnProperty(diji)) {
+            this.diji = diji;
+          } else {
+            this.diji = 1;
+          }
           // let info = getChargeMoney.data.info;
-          // let ids = parseInt(this.$route.query.id) || that.type;
-
+          // let ids = parseInt(this.$route.query.type);// || that.type
+          // console.log(ids,info);
           // if (info.hasOwnProperty(ids)) {
           //   that.colyue = info[ids];
           // } else {
           //   that.colyue = info[1];
           // }
-
-          // for (var item in that.colyue) {
-          //   if (that.colyue[item] == "首充") {
-          //     that.money = item;
-          //   }
-          // }
-
-          let info = getChargeMoney.data.info;
-          let ids = parseInt(this.$route.query.id);
-          if (ids) {
-            this.jjb = true;
-            if (info.hasOwnProperty(ids)) {
-              this.diji = ids;
-            } else {
-              this.diji = 1;
-            }
-          }
-          for (var item in info[this.diji]) {
-            if (info[this.diji][item] == "首充") {
+          for (var item in that.colyue[this.diji]) {
+            if (that.colyue[this.diji][item] == "首充") {
               that.money = item;
             }
           }
+
+          // let info = getChargeMoney.data.info;
+          // let ids = parseInt(this.$route.query.id);
+          // console.log(ids);
+          // if (ids) {
+          //   // this.jjb = true;
+          //   if (info.hasOwnProperty(ids)) {
+          //     this.diji = ids;
+          //   } else {
+          //     this.diji = 1;
+          //   }
+          // }
+          // for (var item in info[this.diji]) {
+          //   if (info[this.diji][item] == "首充") {
+          //     that.money = item;
+          //   }
+          // }
           // Object.keys(info[this.diji]).map((item, index) => {
           //   if (index === 1) {
           //     that.money = item;
           //   }
           // });
 
-          that.colyue = info;
+          // that.colyue = info;
         } else {
           that.$toast(getChargeMoney.data.message);
         }
       });
+      console.log(this.diji, "diji");
     },
     f1() {
       let that = this;
@@ -440,6 +451,7 @@ export default {
       this.money = this.mangl;
     },
     remoneyCl(type, n) {
+      console.log(type, n);
       let that = this;
       that.inde = n + 1;
       if (type !== "999999") {
@@ -454,22 +466,29 @@ export default {
   watch: {
     type: {
       handler(val) {
-        this.type = val;
+        // this.type = val;
+        //是否显示条约
         if (val == 1) {
-          this.yhb = true;
+          this.treaty = true;
         } else {
-          this.yhb = false;
+          this.treaty = false;
         }
+        //类型不同，显示的充值额度不同
         if (this.colyue.hasOwnProperty(val)) {
           this.diji = val;
         } else {
           this.diji = 1;
         }
+        //切换后的充值金额
+        this.inde = 2;
+        this.mangl = "";
         for (var item in this.colyue[this.diji]) {
           if (this.colyue[this.diji][item] == "首充") {
             this.money = item;
+            console.log(item);
           }
         }
+        // this.remoneyCl()
       },
       deep: true,
     },
@@ -553,15 +572,16 @@ export default {
     font-size: 0.24rem;
     color: #6d6d72;
   }
-  //医护帮公约
+  //康养帮公约
   .convention {
     color: rgb(0, 174, 255);
     font-weight: bold;
-    margin-bottom: 10px;
+    margin: 10px 0;
     text-align: left;
     & > span {
       display: inline-block;
       padding: 0 10px;
+      font-size: 0.3rem;
     }
   }
   .re-list {
