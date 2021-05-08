@@ -54,7 +54,7 @@
         text="康养帮和老互帮必须要一起充值才能够享受其中一项"
       />
       <!-- <p class="tipsd">康养帮和老互帮必须要一起充值才能够享受其中一项</p> -->
-      {{ diji }}
+      <!-- {{ diji }} -->
       <ul class="re-list">
         <li v-for="(val, key, index) in colyue[diji]" :key="key">
           <div
