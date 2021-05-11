@@ -43,7 +43,9 @@
         <p>充值金额?</p>
         <p>建议您充值120元以上，避免频繁充值。</p>
       </div> -->
+      <!-- 公约 -->
       <div class="convention" v-if="treatyIf">
+        <input type="checkbox" v-model="treatyCheckbox">
         <span @click="treatyBtn">{{ treatyTitle }}</span>
       </div>
       <van-notice-bar
@@ -144,6 +146,7 @@ export default {
       inform1: false, //提示——这个提示是 康养帮和 老互帮才显示
       treatyTitle: "", //公约的题目——现在有两个公约
       routerPath: "", //不同的公约有不同的内容
+      treatyCheckbox:false,//公约条款前面的选择框
       // jjb: false,//紧急帮
       jr: false,
       // cs: false,
@@ -178,6 +181,7 @@ export default {
     popup,
   },
   updated() {
+    console.log(this.treatyCheckbox,'treatyCheckbox');
     //通知的显示
     this.$route.query.type ||
     this.type == 1 ||
