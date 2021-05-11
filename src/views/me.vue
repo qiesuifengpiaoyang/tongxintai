@@ -32,13 +32,13 @@
       <!-- <van-cell icon="friends-o" title="消费代理商" is-link to="myTeam" /> -->
       <van-cell icon="phone-circle-o" title="联系我们" is-link to="contactus" />
       <!-- <van-cell icon="phone-circle-o" title="客服聊天" is-link to="chat" /> --><!--废弃-->
-      <!-- 21-5-8修改，暂时不上线客服系统 -->
-      <!-- <van-cell
+      
+      <van-cell
         icon="phone-circle-o"
         title="客服聊天"
         is-link
         @click="urlBtn"
-      /> -->
+      />
       <van-cell icon="phone-circle-o" title="收货地址" is-link to="addresses" />
     </div>
     <div class="exit-btn" @click="logout">退出登录</div>

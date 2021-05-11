@@ -40,13 +40,14 @@
         </van-cell-group>
       </van-cell-group>
       <!-- <div class="re-txt">
-        <p>充值金额</p>
+        <p>充值金额?</p>
         <p>建议您充值120元以上，避免频繁充值。</p>
       </div> -->
-      <div class="convention" v-if="treaty">
-        <span @click="yhbgy">《康养帮公约》参与者必读</span>
+      <div class="convention" v-if="treatyIf">
+        <span @click="treatyBtn">{{ treatyTitle }}</span>
       </div>
       <van-notice-bar
+        v-if="inform1"
         class="tipsd"
         :scrollable="false"
         :wrapable="true"
@@ -54,7 +55,6 @@
         text="康养帮和老互帮必须要一起充值才能够享受其中一项"
       />
       <!-- <p class="tipsd">康养帮和老互帮必须要一起充值才能够享受其中一项</p> -->
-      <!-- {{ diji }} -->
       <ul class="re-list">
         <li v-for="(val, key, index) in colyue[diji]" :key="key">
           <div
@@ -138,8 +138,12 @@ export default {
       passwordBoxState: false, //【登陆密码验证】弹窗
       password: "", //验证登录密码
       mangl: "", //自定义充值金额
-      treaty: false, //医护帮
+      treatyIf: false, //条约
       diji: parseInt(this.$route.query.type) || 1,
+      rtype: this.$route.query.type,
+      inform1: false, //提示——这个提示是 康养帮和 老互帮才显示
+      treatyTitle: "", //公约的题目——现在有两个公约
+      routerPath: "", //不同的公约有不同的内容
       // jjb: false,//紧急帮
       jr: false,
       // cs: false,
@@ -167,14 +171,37 @@ export default {
       apiUrl: this.$store.state.apiDomain,
       staticUrl: this.$store.state.staticDomain,
       toast1: "",
-      rtype: this.$route.query.type,
     };
   },
   components: {
     TypePay,
     popup,
   },
-  created() {},
+  updated() {
+    //通知的显示
+    this.$route.query.type ||
+    this.type == 1 ||
+    this.$route.query.type ||
+    this.type == 2
+      ? (this.inform1 = true)
+      : (this.inform1 = false);
+    //是否显示条约
+    // this.type == 1 ? (this.treatyIf = true) : (this.treatyIf = false);
+    if (this.type == 1) {
+      this.treatyIf = true;
+      this.treatyTitle = "《康养帮公约》参与者必读";
+      this.routerPath = "convention";
+    } else if (this.type == 3) {
+      this.treatyIf = true;
+      this.treatyTitle = "《终互帮公约》参与者必读";
+      this.routerPath = "endHelp";
+    } else {
+      this.treatyIf = false;
+    }
+  },
+  created() {
+    console.log(this.$route.query);
+  },
   mounted() {
     if (this.$route.query.fr === "applyhelp") {
       this.sess_carid = sessionStorage.getItem("card_id");
@@ -208,9 +235,9 @@ export default {
   },
 
   methods: {
-    //医护帮公约
-    yhbgy() {
-      this.$router.push("convention");
+    //公约
+    treatyBtn() {
+      this.$router.push(`${this.routerPath}`);
     },
     onRadiocl(o) {
       this.paytype = o;
@@ -299,7 +326,7 @@ export default {
           that.$toast(getChargeMoney.data.message);
         }
       });
-      console.log(this.diji, "diji");
+      // console.log(this.diji, "diji");
     },
     f1() {
       let that = this;
@@ -365,10 +392,19 @@ export default {
       if (that.paytype == 3) {
         // that.passwordBoxState = !that.passwordBoxState;
       } else {
+        let title = "提示";
+        let message = "是否确认本次操作";
+        console.log(that.diji, "diji");
+        console.log(that.type, "type");
+        if (that.diji == 3 || that.type == 3) {
+          title = "终互帮爱心安慰卡";
+          message =
+            "本卡是【同心台】平台终互帮服务专用卡，持有本卡，在后台一直保持有爱心值不低于5个余值。在亲人不幸逝世，平台按着“终互帮公约”，动员全平台“终互帮”所有余值的成员，向亲人逝世家庭贡献爱心值（平台给现金）进行集体安慰。详情见“终互帮公约”";
+        }
         that.$dialog
           .confirm({
-            title: "提示",
-            message: "是否确认本次操作",
+            title: `${title}`,
+            message: `${message}`,
           })
           .then(() => {
             that.toast1 = that.$toast.loading({
@@ -466,13 +502,8 @@ export default {
   watch: {
     type: {
       handler(val) {
-        // this.type = val;
-        //是否显示条约
-        if (val == 1) {
-          this.treaty = true;
-        } else {
-          this.treaty = false;
-        }
+        // //是否显示条约
+        // val == 1 ? (this.treatyIf = true) : (this.treatyIf = false);
         //类型不同，显示的充值额度不同
         if (this.colyue.hasOwnProperty(val)) {
           this.diji = val;
@@ -585,6 +616,7 @@ export default {
     }
   }
   .re-list {
+    margin-top: 0.2rem;
     padding: 0 0.2rem;
     display: flex;
     flex-wrap: wrap;
