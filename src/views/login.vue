@@ -29,7 +29,8 @@
       </van-field>
 
       <p class="agreement">
-        <input type="checkbox"  v-model="abc" @click="abc = !abc" /><span @click="privacy"
+        <input type="checkbox" v-model="abc" @click="abc = !abc" /><span
+          @click="privacy"
           >我已阅读并同意《同心台服务协议及隐私协议》</span
         >
       </p>
@@ -55,9 +56,9 @@ export default {
     return {
       abc: "",
       pitch: false,
-      mobile: "",
-      pwd: "",
-      captcha_code: "",
+      mobile: sessionStorage.getItem("Lmobile") || "",
+      pwd: sessionStorage.getItem("Lpwd") || "",
+      captcha_code: sessionStorage.getItem("Lcaptcha_code") || "",
       captcha_code_img: "",
       apiUrl: this.$store.state.apiDomain,
     };
@@ -71,7 +72,7 @@ export default {
     },
   },
   mounted() {
-    console.log('测试信息');
+    console.log("测试信息");
     this.captcha_code_img_fn();
   },
 
@@ -84,6 +85,9 @@ export default {
       this.pitch = !this.pitch;
     },
     privacy() {
+      sessionStorage.setItem("Lmobile", this.mobile);
+      sessionStorage.setItem("Lpwd", this.pwd);
+      sessionStorage.setItem("Lcaptcha_code", this.captcha_code);
       this.$router.push({
         name: "privacy",
       });
@@ -112,9 +116,9 @@ export default {
       if (that.disabled) {
         return;
       }
-      if(!that.abc){
-        this.$toast('请先阅读并同意相关协议')
-        return
+      if (!that.abc) {
+        this.$toast("请先阅读并同意相关协议");
+        return;
       }
       const toast1 = that.$toast.loading({
         message: "登录中...",

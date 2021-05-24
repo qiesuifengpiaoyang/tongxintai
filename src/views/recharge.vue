@@ -45,7 +45,7 @@
       </div> -->
       <!-- 公约 -->
       <div class="convention" v-if="treatyIf">
-        <input type="checkbox" v-model="treatyCheckbox">
+        <input type="checkbox" v-model="treatyCheckbox" />
         <span @click="treatyBtn">{{ treatyTitle }}</span>
       </div>
       <van-notice-bar
@@ -146,31 +146,31 @@ export default {
       inform1: false, //提示——这个提示是 康养帮和 老互帮才显示
       treatyTitle: "", //公约的题目——现在有两个公约
       routerPath: "", //不同的公约有不同的内容
-      treatyCheckbox:false,//公约条款前面的选择框
+      treatyCheckbox: false, //公约条款前面的选择框
       // jjb: false,//紧急帮
       jr: false,
       // cs: false,
       pageshow: false,
       list: [],
       moremoney: "",
-      type: 0,
+      type: parseInt(sessionStorage.getItem("Rtype")) || 0,
       option1: [{ text: "请选择互助类型", value: 0 }],
       id: 0,
       idshow: false,
       readonly: false,
       reqTitle: "",
-      sess_name: "",
-      sess_carid: "",
+      sess_name: sessionStorage.getItem("sess_name") || "",
+      sess_carid: sessionStorage.getItem("sess_carid") || "",
       sess_moeny: "",
       moenyshow: true,
       money: 0,
-      inde: 2,
+      inde: parseInt(sessionStorage.getItem("inde")) || 2,
       user_id: "",
       // pickerTxt:'请选择互助类型',
       showPicker: false,
       columns: [],
       colyue: {},
-      paytype: "1",
+      paytype: sessionStorage.getItem("paytype") || "1",
       apiUrl: this.$store.state.apiDomain,
       staticUrl: this.$store.state.staticDomain,
       toast1: "",
@@ -181,7 +181,6 @@ export default {
     popup,
   },
   updated() {
-    console.log(this.treatyCheckbox,'treatyCheckbox');
     //通知的显示
     this.$route.query.type ||
     this.type == 1 ||
@@ -193,18 +192,15 @@ export default {
     // this.type == 1 ? (this.treatyIf = true) : (this.treatyIf = false);
     if (this.type == 1) {
       this.treatyIf = true;
-      this.treatyTitle = "《康养帮公约》参与者必读";
+      this.treatyTitle = "我已阅读并同意《康养帮公约》";
       this.routerPath = "convention";
     } else if (this.type == 3) {
       this.treatyIf = true;
-      this.treatyTitle = "《终互帮公约》参与者必读";
+      this.treatyTitle = "我已阅读并同意《终互帮公约》";
       this.routerPath = "endHelp";
     } else {
       this.treatyIf = false;
     }
-  },
-  created() {
-    console.log(this.$route.query);
   },
   mounted() {
     if (this.$route.query.fr === "applyhelp") {
@@ -241,8 +237,37 @@ export default {
   methods: {
     //公约
     treatyBtn() {
+      /**
+       * 21-5-20修改，点开协议后，返回之前输入的不应该清空
+       * 将当前页面的信息添加到本地缓存中————不让放在路由中
+       */
+      console.log(this.colyue[this.type]);
+      sessionStorage.setItem("Rtype", this.type); //类型
+      sessionStorage.setItem("inde", this.inde); //边框
+      sessionStorage.setItem("money", this.money); //金额
+      sessionStorage.setItem("paytype", this.paytype); //支付方式
+      sessionStorage.setItem("sess_name", this.sess_name); //姓名
+      sessionStorage.setItem("sess_carid", this.sess_carid); //身份证
       this.$router.push(`${this.routerPath}`);
+      /**
+       * 21-5-20修改，点开协议后，返回之前输入的不应该清空
+       * 加两个动态路由进去
+       * *舍弃，要求不让放路由中
+       */
+      // let params = {};
+      // if (this.sess_name !== "") {
+      //   params.sess_name = this.sess_name;
+      // }
+      // if (this.sess_carid !== "") {
+      //   params.sess_carid = this.sess_carid;
+      // }
+      // console.log(params);
+      // this.$router.push({
+      //   name: `${this.routerPath}`,
+      //   params: params,
+      // });
     },
+    //支付方式
     onRadiocl(o) {
       this.paytype = o;
     },
@@ -259,7 +284,7 @@ export default {
       ]).then((res) => {
         let [ehelp, getChargeMoney] = res;
         that.pageshow = true;
-        toast1.clear();
+
         if (ehelp.data.status === 1) {
           try {
             that.reqId = that.$route.query.reqId;
@@ -302,6 +327,13 @@ export default {
               that.money = item;
             }
           }
+          if (this.diji === 3) {
+            console.log(
+              Object.keys(this.colyue[3])[1],
+              "this.colyue[this.diji][2]"
+            );
+            this.money = Object.keys(this.colyue[3])[1];
+          }
 
           // let info = getChargeMoney.data.info;
           // let ids = parseInt(this.$route.query.id);
@@ -328,6 +360,18 @@ export default {
           // that.colyue = info;
         } else {
           that.$toast(getChargeMoney.data.message);
+        }
+        toast1.clear();
+        console.log("触发了么2222222");
+        if (sessionStorage.getItem("money")) {
+          this.money = parseInt(sessionStorage.getItem("money")); //金额
+          this.mangl = parseInt(sessionStorage.getItem("money"));
+        }
+        if (sessionStorage.getItem("Rtype")) {
+          this.diji = parseInt(sessionStorage.getItem("Rtype"));
+        }
+        if (parseInt(sessionStorage.getItem("inde"))) {
+          this.inde = parseInt(sessionStorage.getItem("inde"));
         }
       });
       // console.log(this.diji, "diji");
@@ -384,6 +428,13 @@ export default {
       if (!that.sess_name) {
         that.$toast("请输入互助人姓名");
         return;
+      }
+      console.log(this.type, "立即支付");
+      if (this.type == 1 || this.type == 3) {
+        if (!this.treatyCheckbox) {
+          that.$toast("请勾选公约");
+          return;
+        }
       }
       if (!that.money) {
         that.$toast("请输入金额");
@@ -485,13 +536,20 @@ export default {
       this.showPicker = true;
     },
     onClickLeft() {
+      //删除缓存
+      window.sessionStorage.removeItem("Rtype");
+      window.sessionStorage.removeItem("inde");
+      window.sessionStorage.removeItem("money");
+      window.sessionStorage.removeItem("paytype");
+      window.sessionStorage.removeItem("sess_name");
+      window.sessionStorage.removeItem("sess_carid");
       this.$router.go(-1);
     },
     inpCl(val) {
       this.money = this.mangl;
     },
+    //边框
     remoneyCl(type, n) {
-      console.log(type, n);
       let that = this;
       that.inde = n + 1;
       if (type !== "999999") {
@@ -500,12 +558,13 @@ export default {
       } else {
         that.money = "";
       }
+      console.log(type, n, this.inde);
     },
   },
-
   watch: {
     type: {
       handler(val) {
+        console.log("是否触发");
         // //是否显示条约
         // val == 1 ? (this.treatyIf = true) : (this.treatyIf = false);
         //类型不同，显示的充值额度不同
@@ -516,12 +575,22 @@ export default {
         }
         //切换后的充值金额
         this.inde = 2;
+
         this.mangl = "";
         for (var item in this.colyue[this.diji]) {
+          console.log("for", this.diji, this.colyue[this.diji][item]);
           if (this.colyue[this.diji][item] == "首充") {
             this.money = item;
             console.log(item);
           }
+        }
+        if (val === 3) {
+          console.log(this.colyue[3]);
+          console.log(
+            Object.keys(this.colyue[3])[1],
+            "this.colyue[this.diji][2]"
+          );
+          this.money = Object.keys(this.colyue[3])[1];
         }
         // this.remoneyCl()
       },
@@ -617,6 +686,9 @@ export default {
       display: inline-block;
       padding: 0 10px;
       font-size: 0.3rem;
+    }
+    & > input {
+      margin-left: 0.2rem;
     }
   }
   .re-list {

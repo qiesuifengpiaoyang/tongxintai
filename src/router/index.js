@@ -330,6 +330,11 @@ const routes = [
   },
   {
     //医护帮公约
+    //21-5-20修改，点开协议后，返回之前输入的不应该清空
+    //加两个动态路由进去/:sess_name?/:sess_carid?
+    /**
+     * 
+     */
     path: '/convention',
     name: 'convention', // 1
     meta: { requiresAuth: true, wxt: true },
@@ -337,6 +342,9 @@ const routes = [
   },
   {
     //终互帮公约
+    //21-5-20修改，点开协议后，返回之前输入的不应该清空
+    //加两个动态路由进去
+    //修改，不让写在路由中:sess_name?/:sess_carid?
     path: '/endHelp',
     name: 'endHelp', // 1
     meta: { requiresAuth: true, wxt: true },
@@ -456,8 +464,8 @@ router.beforeEach((to, from, next) => {
      * 而是少了一个#
      */
     // window.location.href = `${window.location.protocol}//${window.location.host}/dx/${_siteT}`;//地址跳转
-    console.log(`${_site.slice(0, 4)} + '#/' + ${_site.slice(4)}`,'修改后的');
-    window.location.href = `${_site.slice(0, 4)}` + '#/' +`${_site.slice(4)}`
+    console.log(`${_site.slice(0, 4)} + '#/' + ${_site.slice(4)}`, '修改后的');
+    window.location.href = `${_site.slice(0, 4)}` + '#/' + `${_site.slice(4)}`
     return;
   } else if (to.matched.some(record => record.meta.wxt) && is_weixn()) {
 

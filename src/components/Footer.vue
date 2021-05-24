@@ -36,8 +36,8 @@ export default {
     methods:{
         tabnarfn(n){
             if(n.id === 5){
-                this.$dialog({ message: '等待开启' });
-                // window.location.href='/dx/'
+                // this.$dialog({ message: '等待开启' });
+                window.location.href='/dx/'
             }else{
                 this.$router.push(n.url)
             }
