@@ -56,6 +56,15 @@
         left-icon="volume-o"
         text="康养帮和老互帮必须要一起充值才能够享受其中一项"
       />
+      <van-notice-bar
+        v-if="inform2"
+        class="tipsd"
+        :scrollable="false"
+        :wrapable="true"
+        left-icon="volume-o"
+        text="终互帮和老互帮必须要一起充值才能够享受"
+      />
+      <!-- 康养帮和老互帮必须要一起充值才能够享受其中一项 -->
       <!-- <p class="tipsd">康养帮和老互帮必须要一起充值才能够享受其中一项</p> -->
       <ul class="re-list">
         <li v-for="(val, key, index) in colyue[diji]" :key="key">
@@ -144,6 +153,7 @@ export default {
       diji: parseInt(this.$route.query.type) || 1,
       rtype: this.$route.query.type,
       inform1: false, //提示——这个提示是 康养帮和 老互帮才显示
+      inform2: false, //终互帮的提醒
       treatyTitle: "", //公约的题目——现在有两个公约
       routerPath: "", //不同的公约有不同的内容
       treatyCheckbox: false, //公约条款前面的选择框
@@ -201,6 +211,10 @@ export default {
     } else {
       this.treatyIf = false;
     }
+    //终互帮的提醒
+    this.$route.query.type || this.type == 3
+      ? (this.inform2 = true)
+      : (this.inform2 = false);
   },
   mounted() {
     if (this.$route.query.fr === "applyhelp") {

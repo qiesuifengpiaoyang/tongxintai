@@ -89,10 +89,10 @@ export default {
     },
     //跳转客服
     urlBtn() {
-      //http://8.136.118.229/#/chat/1/%E5%BC%A0%E4%B8%89/11111111111
-      window.location.href = `http://8.136.118.229/#/chat/${sessionStorage.getItem(
-        "user_id"
-      )}/${sessionStorage.getItem("name")}/${sessionStorage.getItem("mobile")}`;
+      // window.location.href = `http://8.136.118.229/#/chat/${sessionStorage.getItem(
+      //   "user_id"
+      // )}/${sessionStorage.getItem("name")}/${sessionStorage.getItem("mobile")}`;
+      window.location.href = sessionStorage.getItem('chat_url')
     },
     //收货地址
     shdz() {
