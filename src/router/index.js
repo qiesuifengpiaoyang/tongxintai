@@ -351,6 +351,13 @@ const routes = [
     component: () => import(/* webpackChunkName: "endHelp" */ '../views/endHelp.vue')
   },
   {
+    //老人互帮公约
+    path: '/oldHelp',
+    name: 'oldHelp', // 1
+    meta: { requiresAuth: true, wxt: true },
+    component: () => import(/* webpackChunkName: "oldHelp" */ '../views/oldHelp.vue')
+  },
+  {
     //教学
     path: '/teaching/:id',
     name: 'teaching',

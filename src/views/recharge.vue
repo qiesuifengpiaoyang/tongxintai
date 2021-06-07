@@ -77,13 +77,13 @@
             ]"
             v-if="key < '999999'"
           >
-            <i v-if="val === '首充'">推荐</i>
+            <i v-if="val === '首次办理'">推荐</i>
             <!-- <i v-if="index === 1">推荐</i> -->
             <span>{{ key }}</span>
             <span>
               {{ val }}
               <!-- <span v-if="index === 0">每次</span>
-              <span v-if="index === 1">首充</span>
+              <span v-if="index === 1">首次办理</span>
               <span v-if="index === 2">每次</span> -->
             </span>
           </div>
@@ -154,7 +154,7 @@ export default {
       rtype: this.$route.query.type,
       inform1: false, //提示——这个提示是 康养帮和 老互帮才显示
       inform2: false, //终互帮的提醒
-      treatyTitle: "", //公约的题目——现在有两个公约
+      treatyTitle: "", //公约的题目——现在有两个公约//21-6-4三个公约
       routerPath: "", //不同的公约有不同的内容
       treatyCheckbox: false, //公约条款前面的选择框
       // jjb: false,//紧急帮
@@ -192,9 +192,9 @@ export default {
   },
   updated() {
     //通知的显示
-    this.$route.query.type ||
+    this.$route.query.type == 1 ||
     this.type == 1 ||
-    this.$route.query.type ||
+    this.$route.query.type == 2 ||
     this.type == 2
       ? (this.inform1 = true)
       : (this.inform1 = false);
@@ -208,11 +208,15 @@ export default {
       this.treatyIf = true;
       this.treatyTitle = "我已阅读并同意《终互帮公约》";
       this.routerPath = "endHelp";
-    } else {
+    } else if(this.type == 2){
+      this.treatyIf = true;
+      this.treatyTitle = "我已阅读并同意《老互帮公约》";
+      this.routerPath = "oldHelp";
+    }else{
       this.treatyIf = false;
     }
     //终互帮的提醒
-    this.$route.query.type || this.type == 3
+    this.$route.query.type == 3 || this.type == 3
       ? (this.inform2 = true)
       : (this.inform2 = false);
   },
@@ -337,7 +341,7 @@ export default {
           //   that.colyue = info[1];
           // }
           for (var item in that.colyue[this.diji]) {
-            if (that.colyue[this.diji][item] == "首充") {
+            if (that.colyue[this.diji][item] == "首次办理") {
               that.money = item;
             }
           }
@@ -361,7 +365,7 @@ export default {
           //   }
           // }
           // for (var item in info[this.diji]) {
-          //   if (info[this.diji][item] == "首充") {
+          //   if (info[this.diji][item] == "首次办理") {
           //     that.money = item;
           //   }
           // }
@@ -593,7 +597,7 @@ export default {
         this.mangl = "";
         for (var item in this.colyue[this.diji]) {
           console.log("for", this.diji, this.colyue[this.diji][item]);
-          if (this.colyue[this.diji][item] == "首充") {
+          if (this.colyue[this.diji][item] == "首次办理") {
             this.money = item;
             console.log(item);
           }
