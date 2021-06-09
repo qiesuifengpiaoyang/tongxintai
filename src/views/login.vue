@@ -29,7 +29,9 @@
       </van-field>
 
       <p class="agreement">
-        <input type="checkbox" v-model="abc" @click="abc = !abc" /><span
+        <van-checkbox class="checkbox" v-model="abc"></van-checkbox>
+        <!-- <input type="checkbox" v-model="abc" @click="abc = !abc" /> -->
+        <span
           @click="privacy"
           >我已阅读并同意《同心台服务协议及隐私协议》</span
         >
@@ -54,7 +56,7 @@ import qs from "qs";
 export default {
   data() {
     return {
-      abc: "",
+      abc: false,
       pitch: false,
       mobile: sessionStorage.getItem("Lmobile") || "",
       pwd: sessionStorage.getItem("Lpwd") || "",
@@ -222,9 +224,13 @@ export default {
       text-align: left;
       // color: rgb(107, 110, 253);
       color: rgb(0, 4, 255);
+      // -webkit-user-select: text !important;
       & > span {
         padding-left: 0.2rem;
         // text-decoration: underline;
+      }
+      .van-icon{
+        font-size: 0.3rem;
       }
     }
     .agreementColor {

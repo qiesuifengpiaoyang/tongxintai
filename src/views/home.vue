@@ -27,7 +27,7 @@
         </van-swipe-item>
       </van-swipe>
       <div class="plan-con">
-        <div class="plan-list">
+        <!-- <div class="plan-list">
           <div class="plan-tit"></div>
           <div class="plan-tit-1">收入展示</div>
           <van-swipe
@@ -41,7 +41,7 @@
             </van-swipe-item>
           </van-swipe>
           <span @click="hrefmore" class="plan-more">查看更多</span>
-        </div>
+        </div> -->
       </div>
 
       <div v-if="featurelist.length > 0" class="feature-con">
@@ -145,9 +145,9 @@ export default {
     clickimg(item) {
       this.$router.push({ path: "too", query: { id: item.n_id } });
     },
-    hrefmore() {
-      this.$router.push("/plan");
-    },
+    // hrefmore() {
+    //   this.$router.push("/plan");
+    // },
     onClickRight() {
       this.$router.push("/contactus");
     },

@@ -69,13 +69,13 @@ const routes = [
     // meta: { wxt: true },
     component: () => import(/* webpackChunkName: "register" */ '../views/register.vue')
   },
-  {
-    //销售
-    path: '/plan',
-    name: 'plan', // 1
-    meta: { requiresAuth: true, wxt: true },
-    component: () => import(/* webpackChunkName: "plan" */ '../views/plan.vue')
-  },
+  // {
+  //   //销售
+  //   path: '/plan',
+  //   name: 'plan', // 1
+  //   meta: { requiresAuth: true, wxt: true },
+  //   component: () => import(/* webpackChunkName: "plan" */ '../views/plan.vue')
+  // },
   {
     //收款人
     path: '/toPay',
