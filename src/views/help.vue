@@ -85,14 +85,15 @@ export default {
   .topay-list {
     padding: 0.24rem;
     li {
-      background: rgba(44, 49, 98);
+      // background: rgba(44, 49, 98);
+      background-color: #fff3e5;
       border-radius: 5px;
       padding: 0.24rem;
       margin-bottom: 0.24rem;
-      color: #7489ac;
+      // color: #7489ac;
       position: relative;
       font-size: 0.24rem;
-      color: #fff;
+      // color: #fff;
       h3 {
         text-align: left;
         font-size: 0.3rem;
@@ -102,7 +103,9 @@ export default {
         position: absolute;
         bottom: 0.1rem;
         right: 0.1rem;
-        background: #35bffd;
+        // background: #35bffd;
+        // background-image: linear-gradient( 135deg, #3C8CE7 10%, #00EAFF 100%);
+        background-image: linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%);
         padding: 5px 10px 4px;
         color: #fff;
         border-radius: 5px;

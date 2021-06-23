@@ -492,6 +492,8 @@ router.beforeEach((to, from, next) => {
           sessionStorage.setItem("recommender_name", data.info.parent.username);//紧急帮——推荐人——姓名
           sessionStorage.setItem("recommender_phone", data.info.parent.mobile);//紧急帮——推荐人——电话
           sessionStorage.setItem("chat_url", data.info.chat_url);//聊天地址
+          sessionStorage.setItem("upgrade_amount", data.info.upgrade_amount);//销售余额
+          sessionStorage.setItem("extent_point", data.info.extent_point);//推广积分
           // sessionStorage.setItem("msg", data.info.msg);//msg
           sessionStorage.setItem("user_id", data.info.user_id);//user_id
           sessionStorage.setItem("title", data.info.title);

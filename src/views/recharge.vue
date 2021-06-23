@@ -208,11 +208,11 @@ export default {
       this.treatyIf = true;
       this.treatyTitle = "我已阅读并同意《终互帮公约》";
       this.routerPath = "endHelp";
-    } else if(this.type == 2){
+    } else if (this.type == 2) {
       this.treatyIf = true;
       this.treatyTitle = "我已阅读并同意《老互帮公约》";
       this.routerPath = "oldHelp";
-    }else{
+    } else {
       this.treatyIf = false;
     }
     //终互帮的提醒

@@ -46,7 +46,8 @@ export default {
     left: 0;
     width: 100vw;
     max-height: 500px;
-    background-color: #fff;
+    background-color: #fffbe8;
+    color: #ed6a0c;
     overflow: hidden;
     padding: 0.3rem 0;
     display: flex;

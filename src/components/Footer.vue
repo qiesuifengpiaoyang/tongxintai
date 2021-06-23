@@ -37,7 +37,7 @@ export default {
     let open_academy = parseInt(sessionStorage.getItem("open_academy"));
     let str = { id: 6, icon: "bookmark", text: "商学院", url: "/teaching/0" };
     if (open_academy) {
-      this.gridItems.splice(4, 0, str);
+      this.gridItems.splice(3, 0, str);
     }
   },
   props: ["isActive"],

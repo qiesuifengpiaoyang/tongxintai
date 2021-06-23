@@ -1,45 +1,134 @@
 <template>
   <div class="me-wrapper">
-    <div class="me-header">
-      <div class="me-header-left logo"></div>
-      <div class="me-header-right">
-        <p>{{ username }}</p>
-        <p>{{ title }}</p>
-      </div>
-      <div class="qwidt">
+    <div class="me-top">
+      <div class="me-header">
+        <div class="me-header-left logo">
+          <img :src="icon_url" alt="" />
+        </div>
+        <div class="me-header-right">
+          <p>{{ username }}</p>
+          <p>{{ title }}</p>
+        </div>
+        <!-- <div class="qwidt">
         <van-button color="#fff" plain type="primary" @click="goldFn"
           >原始积分</van-button
         >
+      </div> -->
+      </div>
+      <div class="control">
+        <div @click="toMemWal(0)">
+          <p>{{ upgrade_amount == "undefined" ? 0 : upgrade_amount }}</p>
+          <button>销售余额</button>
+        </div>
+        <div @click="toMemWal(1)">
+          <p>{{ extent_point == "undefined" ? 0 : extent_point }}</p>
+          <button>推广积分</button>
+        </div>
       </div>
     </div>
+    <div class="per-order">
+      <div class="hed">
+        <div>我的订单</div>
+        <span @click="goToRoders(0)">查看全部<van-icon name="arrow" /></span>
+      </div>
+      <van-grid :column-num="5" :border="false">
+        <van-grid-item
+          icon="completed"
+          text="已完成"
+          badge=""
+          @click="goToRoders(1)"
+        />
+        <van-grid-item
+          icon="pending-payment"
+          text="待付款"
+          badge=""
+          @click="goToRoders(2)"
+        />
+        <van-grid-item
+          icon="underway-o"
+          text="待发货"
+          badge=""
+          @click="goToRoders(3)"
+        />
+        <van-grid-item
+          icon="logistics"
+          text="待收货"
+          badge=""
+          @click="goToRoders(4)"
+        />
+        <van-grid-item
+          icon="thumb-circle-o"
+          text="待评价"
+          badge=""
+          @click="goToRoders(5)"
+        />
+      </van-grid>
+    </div>
+    <div class="per-list">
+      <van-grid :column-num="5" :border="false">
+        <van-grid-item icon="balance-pay" text="代金券" @click="couponcl" />
+        <van-grid-item
+          icon="cart-circle-o"
+          text="购物卡"
+          @click="goGiftCARDS"
+        />
+        <van-grid-item icon="location-o" text="收货地址" @click="addressescl" />
+        <van-grid-item icon="bag-o" text="我的拼单" @click="bagocal" />
+        <!-- <van-grid-item icon="setting-o" text="设置" /> -->
+
+        <van-grid-item icon="chat-o" text="互帮中心" to="helpCenter" />
+        <van-grid-item icon="user-o" text="实名认证" to="userInfo" />
+        <van-grid-item icon="idcard" text="绑定银行卡" to="bindCard" />
+        <van-grid-item icon="alipay" text="绑定支付宝" to="bindAlipay" />
+        <van-grid-item icon="wechat" text="绑定微信" to="bindWeChat" />
+        <van-grid-item
+          icon="cash-back-record"
+          text="我的收益"
+          @click="show = !show"
+        />
+        <van-grid-item
+          icon="balance-pay"
+          text="我的钱包"
+          @click="toBalancelog"
+        />
+        <!-- <van-grid-item icon="friends-o" text="我的好友" /> -->
+      </van-grid>
+    </div>
     <div class="me-list">
-      <van-cell icon="user-o" title="实名认证" is-link to="userInfo" />
+      <!-- <van-cell icon="user-o" title="实名认证" is-link to="userInfo" />
       <van-cell icon="idcard" title="绑定银行卡" is-link to="bindCard" />
       <van-cell icon="alipay" title="绑定支付宝" is-link to="bindAlipay" />
-      <van-cell icon="wechat" title="绑定微信" is-link to="bindWeChat" />
-      <van-cell
+      <van-cell icon="wechat" title="绑定微信" is-link to="bindWeChat" /> -->
+      <!-- <van-cell
         icon="cash-back-record"
         title="我的收益"
         is-link
         @click="myEarnCl"
-      />
+      /> -->
+      <van-cell icon="friends-o" title="我的好友" is-link to="myfriend" />
+      <!-- <van-cell icon="chat-o" title="互帮中心" is-link to="helpCenter" /> -->
+      <van-cell icon="comment-circle-o" title="联系我们" is-link to="contactus" />
       <!-- <van-cell icon="gold-coin-o" title="收款方式" is-link  to="payment"/> -->
       <!-- <van-cell icon="orders-o" title="付款列表" is-link to="paylist"/>隐藏 -->
       <!-- <van-cell icon="orders-o" title="收款列表" is-link to="collist"/> -->
-      <van-cell icon="friends-o" title="我的好友" is-link to="myfriend" />
-      <van-cell icon="chat-o" title="互帮中心" is-link to="helpCenter" />
       <!--21-5-8修改，暂时取消销售加盟商-->
       <!-- <van-cell icon="friends-o" title="消费代理商" is-link to="myTeam" /> -->
-      <van-cell icon="phone-circle-o" title="联系我们" is-link to="contactus" />
       <!-- <van-cell icon="phone-circle-o" title="客服聊天" is-link to="chat" /> --><!--废弃-->
-      
+
       <van-cell
         icon="phone-circle-o"
         title="客服聊天"
         is-link
         @click="urlBtn"
       />
-      <van-cell icon="phone-circle-o" title="收货地址" is-link to="addresses" />
+      <van-cell
+        class="fzwx"
+        icon="phone-circle-o"
+        title="电商客服：18011680349（微信同步）"
+        is-link
+        @click="wx"
+      />
+      <van-cell icon="location-o" title="收货地址" is-link to="addresses" />
     </div>
     <div class="exit-btn" @click="logout">退出登录</div>
     <Footer :isActive="isActive" @click="onhrefFn" />
@@ -51,7 +140,7 @@
       @select="onSelect"
     />
     <popup></popup>
-    <p class="records" @click="referenceBtn">蜀ICP备20018437号-1</p>
+    <!-- <p class="records" @click="referenceBtn">蜀ICP备20018437号-1</p> -->
   </div>
 </template>
 <script>
@@ -59,6 +148,7 @@ import Footer from "@/components/Footer.vue";
 import popup from "@/components/popup.vue";
 import axios from "@/tool/axios.js";
 import qs from "qs";
+import ClipboardJS from "clipboard";
 export default {
   data() {
     return {
@@ -73,35 +163,135 @@ export default {
       title: sessionStorage.getItem("title"),
       apiUrl: this.$store.state.apiDomain,
       staticUrl: this.$store.state.staticDomain,
+      icon_url: sessionStorage.getItem("icon_url")
+        ? `${sessionStorage.getItem("icon_url")}`
+        : "../assets/img/logo.png",
+      extent_point: sessionStorage.getItem("extent_point") || 0, //推广积分
+      upgrade_amount: sessionStorage.getItem("upgrade_amount") || 0, //销售余额
+      url: "", //获取网址的hash值
     };
   },
   components: {
     Footer,
     popup,
   },
-  mounted() {},
-  created() {},
+  mounted() {
+    console.log(this.extent_point);
+    console.log(this.upgrade_amount);
+  },
+  created() {
+    let _url = window.location.href.replace(/#/, "dx/#");
+    this.url = _url.replace(/me/, "");
+
+    const toast1 = this.$toast.loading({
+      duration: 0,
+      forbidClick: true,
+    });
+    axios.post(`${this.apiUrl}/balance`).then((res) => {
+      toast1.clear();
+      let { data } = res;
+      let { status, info, message } = data;
+      console.log(res);
+      if (status === 1) {
+        this.money = info.money;
+      } else {
+        this.$toast(`${message}`);
+      }
+    });
+  },
   computed: {},
   methods: {
-    //备案号
-    referenceBtn() {
-      window.location.href = "https://beian.miit.gov.cn/#/home";
+    //唤起微信
+    wx() {
+      let that = this;
+      that.$nextTick(() => {
+        let clipboardUrl = new ClipboardJS(".fzwx", {
+          text: function () {
+            return 18011680349;
+          },
+        });
+        clipboardUrl.on("success", function (e) {
+          that.$toast({
+            message: "复制成功",
+            forbidClick: true,
+          });
+          e.clearSelection();
+          clipboardUrl.destroy();
+          window.location.href = "weixin://";
+        });
+        clipboardUrl.on("error", function (e) {
+          that.$toast({
+            message: "该浏览器不支持自动复制",
+            forbidClick: true,
+          });
+          clipboardUrl.destroy();
+          window.location.href = "weixin://";
+        });
+      });
+      
     },
+    //备案号
+    // referenceBtn() {
+    //   window.location.href = "https://beian.miit.gov.cn/#/home";
+    // },
     //跳转客服
     urlBtn() {
-      // window.location.href = `http://8.136.118.229/#/chat/${sessionStorage.getItem(
-      //   "user_id"
-      // )}/${sessionStorage.getItem("name")}/${sessionStorage.getItem("mobile")}`;
-      window.location.href = sessionStorage.getItem('chat_url')
+      window.location.href = sessionStorage.getItem("chat_url");
     },
     //收货地址
     shdz() {
       console.log("收货地址");
     },
-    goldFn() {
-      this.$router.push({
-        name: "myPointstwo",
-      });
+    //原始积分
+    // goldFn() {
+    //   this.$router.push({
+    //     name: "myPointstwo",
+    //   });
+    // },
+    toMemWal(n) {
+      if (n === 0) {
+        this.$router.push("memWal/1");
+      } else if (n === 1) {
+        this.$router.push("myPoints");
+      }
+    },
+    //我的钱包————余额
+    toBalancelog() {
+      window.location.href = `${this.url}balancelog`;
+    },
+    //我的订单
+    goToRoders(n) {
+      // this.$router.push({
+      //   name: "orders",
+      //   params: { type: n },
+      // });
+      // console.log(`${this.url}orders/${n}`);
+      window.location.href = `${this.url}orders/${n}`;
+    },
+    //代金卷
+    couponcl() {
+      // this.$router.push({
+      //   name: "coupon",
+      // });
+      window.location.href = `${this.url}coupon`;
+    },
+    // 购物卡
+    goGiftCARDS() {
+      window.location.href = `${this.url}GiftCARDS`;
+    },
+    //收货地址
+    addressescl() {
+      // this.$router.push({
+      //   name: "addresses",
+      // });
+      window.location.href = `${this.url}addresses`;
+    },
+    //我的拼单
+    bagocal() {
+      // this.$router.push({
+      //   name: "makelist",
+      // });
+      window.location.href = `${this.url}makelist`;
     },
     onhrefFn(n) {
       this.$router.push(n.url);
@@ -148,82 +338,192 @@ export default {
 .me-wrapper {
   padding-bottom: 1.5rem;
   min-height: 100vh;
-  background: #fbbb5f;
-  .exit-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 0.8rem;
-    font-size: 0.28rem;
-    width: 80%;
-    background-color: #fb932b;
-    color: #fff;
-    border-radius: 5px;
-    margin: 0.5rem auto;
-    border: 0;
-  }
-  .me-header {
-    padding: 0.24rem;
-    overflow: hidden;
-    .qwidt {
+  // background: #fbbb5f;
+  // background-clip: #f4f4f4;
+  .me-top {
+    padding-bottom: 0.6rem;
+    // background-color: #fbbb5f;
+    background: url("../assets/img/1.jpg");
+    .me-header {
+      padding: 0.24rem;
+      overflow: hidden;
+      .qwidt {
+        display: flex;
+        flex-direction: column;
+        float: right;
+        margin-top: 0.16rem;
+        button {
+          width: 1.8rem;
+          padding: 0;
+          height: 34px;
+          margin-top: 0.3rem;
+          border-radius: 5px;
+          background: #fb932b;
+          border: 0;
+          color: #fff;
+          &:first-child {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+    .me-header-left {
+      float: left;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-right: 0.1rem;
+      & > img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+    .me-header-right {
+      float: left;
       display: flex;
+      align-content: center;
       flex-direction: column;
-      float: right;
-      margin-top: 0.16rem;
+      margin-left: 0.24rem;
+      text-align: left;
+      height: 1rem;
+      justify-content: center;
+      p:nth-child(1) {
+        color: #1d1207;
+        font-size: 0.28rem;
+      }
+      p:nth-child(2) {
+        color: #736352;
+        font-size: 0.24rem;
+      }
+    }
+    //21-6-16修改
+
+    .control {
+      position: absolute;
+      left: 5%;
+      width: 90%;
+      // margin: 0 auto;
+      padding: 0.2rem;
+      font-size: 0.28rem;
+      // background-color: #ffd6ae;
+      // background-color: #fcfcfc;
+      background-color: #fff;
+      // border-radius: 8px 8px 0 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-around;
       button {
-        width: 1.8rem;
-        padding: 0;
-        height: 34px;
-        margin-top: 0.3rem;
-        border-radius: 5px;
-        background: #fb932b;
-        border: 0;
-        color: #fff;
-        &:first-child {
-          margin-top: 0;
+        background-color: transparent;
+      }
+      & > button {
+        // padding: 0 0.2rem;
+      }
+      & > div {
+        // color: #fb932b;
+        padding: 0 0.2rem;
+        & > button {
+          color: #646566;
+        }
+        & > p {
+          font-size: 0.4rem;
+          font-weight: bold;
+          // color: #f41c05;
+          color: #f04d3b;
         }
       }
     }
   }
-  .me-header-left {
-    float: left;
-    width: 1rem;
-    height: 1rem;
-  }
-  .me-header-right {
-    float: left;
-    display: flex;
-    align-content: center;
-    flex-direction: column;
-    margin-left: 0.24rem;
-    text-align: left;
-    height: 1rem;
-    justify-content: center;
-    p:nth-child(1) {
-      color: #1d1207;
-      font-size: 0.28rem;
+  //我的订单
+  .per-order {
+    margin-top: 0.98rem;
+    background: #fff;
+    // background: #6b431c;
+    // color: #fff;
+    padding: 12px 12px 0 12px;
+    .hed {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      span {
+        color: #999;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+      }
     }
-    p:nth-child(2) {
-      color: #736352;
-      font-size: 0.24rem;
+    .van-grid-item__content {
+      background-color: transparent;
+      padding: 16px 0;
+      // color: #9c9c9c;
+      // color: #fff;
+      color: #fb932b;
+    }
+    .van-grid-item__text {
+      color: #000;
+      // color: #9c9c9c;
+      // color: #fff;
+    }
+  }
+  //代金卷一栏
+  .per-list {
+    margin-top: 8px;
+    background: #fff;
+    // background: #6b431c;
+    // color: #fff;
+    .van-grid-item__content {
+      padding: 16px 0;
+      // color: rgba(250, 133, 70, 1);
+      // color: #9c9c9c;
+      // background: #6b431c;
+      // color: #fff;
+      color: #fb932b;
+    }
+    .van-grid-item__text {
+      color: #58595b;
+      color: #000;
+      // color: #9c9c9c;
+      // background: #6b431c;
+      // color: #fff;
     }
   }
   .me-list {
+    margin-top: 8px;
     .van-cell {
-      background: #6b431c;
-      color: #fff;
+      // background: #6b431c;
+      // color: #fff;
       padding: 0.24rem;
       i:nth-child(1) {
-        color: #7489ac;
+        // color: #7489ac;
+        color: #fb932b;
       }
       i.van-icon-arrow {
-        color: #ff8c19;
+        // color: #ff8c19;
+        // color: #9c9c9c;
+        color: #fb932b;
       }
     }
     .van-cell__title {
       text-align: left;
       font-size: 0.28rem;
     }
+  }
+  //推出登录
+  .exit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 0.6rem;
+    font-size: 0.28rem;
+    width: 40%;
+    background-color: #fb932b;
+    color: #fff;
+    border-radius: 5px;
+    margin: 0.5rem auto;
+    border: 0;
   }
   .navbar {
     background: #a55709;
