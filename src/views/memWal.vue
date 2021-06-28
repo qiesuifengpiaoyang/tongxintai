@@ -18,13 +18,15 @@
           icon="points"
           plain
           type="primary"
-          v-if="poinshow"
+          v-if="poinshow == 1"
           @click="goldFn(1)"
           >推广积分</van-button
         >
         <!-- v-if="poinshow"【销售提现】中展示/【互帮提现】中隐藏【推广积分】和【兑换原始积分】 -->
         <!-- v-if="hbtx" 用来控制【互帮提现】中只展示一个【推广积分】还是都展示 -->
-        <div @click.stop="dhysjfBtn" class="dhysjf">兑换原始积分</div>
+        <div @click.stop="dhysjfBtn" class="dhysjf" v-if="poinshow != 3">
+          兑换原始积分
+        </div>
         <!-- <van-button color="#ed6a0c" icon="gold-coin" plain type="primary" @click="chsycl">查看收益</van-button> -->
       </div>
       <!-- <div class="chsy" @click="chsycl">
@@ -194,7 +196,8 @@ export default {
   data() {
     return {
       // hbtx:true,//用来控制【互帮提现】中只展示一个【推广积分】还是都展示
-      poinshow: +this.$route.params.id === 1 ? true : false, //【销售提现】中展示/【互帮提现】中隐藏【推广积分】和【兑换原始积分】
+      poinshow: this.$route.params.id, //【销售提现】中展示/【互帮提现】中隐藏【推广积分】和【兑换原始积分】
+      // poinshow: +this.$route.params.id === 1 ? true : false,
       income: [],
       outcome: [],
       upgrade_amount: 0,
@@ -211,43 +214,58 @@ export default {
       isclick: false,
       apiUrl: this.$store.state.apiDomain,
       //比例
-      integral:0,//积分
+      integral: 0, //积分
       point: 0, //等比兑换的原始积分数量
+      // type:this.$route.params.id
     };
   },
   components: {
     integral,
-    popup
+    popup,
   },
   created() {
+    //兑换比例
     axios.get(`${this.apiUrl}/subscriptionRatio`).then((val) => {
       let { data } = val;
       let { info, message, status } = data;
-      if (this.poinshow) {
-        this.integral = info.upgrade;
-      } else {
-        this.integral = info.available;
-      }
       this.point = info.point;
+      if (this.poinshow == 1) {
+        this.integral = info.upgrade;
+        return;
+      }
+      if (this.poinshow == 2) {
+        this.integral = info.available;
+        return;
+      }
+      if (this.poinshow == 3) {
+        this.integral = info.shop;
+        return;
+      }
     });
   },
   mounted() {
-    if (+this.$route.params.id === 1) {
+    // if (+this.$route.params.id === 1) {
+    //   this.title = "销售提现";
+    // } else {
+    //   this.title = "互帮提现";
+    //   // this.hbtx = false;
+    // }
+    if (this.poinshow == 1) {
       this.title = "销售提现";
-    } else {
+    } else if (this.poinshow == 2) {
       this.title = "互帮提现";
-      // this.hbtx = false;
+    } else if (this.poinshow == 3) {
+      this.title = "电销提现";
     }
     this.onLoad();
   },
   methods: {
-    dhysjfBtn(){
-      if(!this.poinshow){
-        this.$toast("暂未开放")
-      }else{
-        this.dhysjf = !this.dhysjf
+    dhysjfBtn() {
+      if (!this.poinshow) {
+        this.$toast("暂未开放");
+      } else {
+        this.dhysjf = !this.dhysjf;
       }
-      
     },
     goldFn(n) {
       this.$router.push("/myPoints");
@@ -295,7 +313,11 @@ export default {
       }, 1e3);
     },
     chsycl() {
-      this.show = !this.show;
+      if (this.poinshow != 3) {
+        this.show = !this.show;
+        return;
+      }
+      this.$router.push("/salesDetailed");
     },
     btnpay() {
       let that = this;
@@ -320,10 +342,17 @@ export default {
         duration: 0,
       });
       let url = "";
-      if (+that.$route.params.id === 2) {
-        url = `${this.apiUrl}/applyEhelpWithdrawal`;
-      } else {
+      // if (+that.$route.params.id === 2) {
+      //   url = `${this.apiUrl}/applyEhelpWithdrawal`;
+      // } else {
+      //   url = `${this.apiUrl}/applySaleWithdrawal`;
+      // }
+      if (that.poinshow == 1) {
         url = `${this.apiUrl}/applySaleWithdrawal`;
+      } else if (that.poinshow == 2) {
+        url = `${this.apiUrl}/applyEhelpWithdrawal`;
+      } else if (that.poinshow == 3) {
+        url = `${this.apiUrl}/applyEhelpWithdrawal`;
       }
       axios
         .post(
@@ -363,10 +392,17 @@ export default {
         duration: 0,
       });
       let url = "";
-      if (+that.$route.params.id === 2) {
-        url = `${this.apiUrl}/getRewardLog`;
-      } else {
+      // if (+that.$route.params.id === 2) {
+      //   url = `${this.apiUrl}/getRewardLog`;
+      // } else {
+      //   url = `${this.apiUrl}/getUpgradeLog`;
+      // }
+      if (that.poinshow == 1) {
         url = `${this.apiUrl}/getUpgradeLog`;
+      } else if (that.poinshow == 2) {
+        url = `${this.apiUrl}/getRewardLog`;
+      } else if (that.poinshow == 3) {
+        url = `${this.apiUrl}/getRewardLog`;
       }
       axios
         .get(url)

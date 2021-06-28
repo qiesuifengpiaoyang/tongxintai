@@ -436,6 +436,20 @@ const routes = [
     name: 'history',
     meta: { requiresAuth: true, wxt: true },
     component: () => import(/*webpackChunkName: "history" */ '../views/history.vue')
+  },
+  {
+    //爱心积分
+    path: '/loveprofit',
+    name: 'loveprofit',
+    meta: { requiresAuth: true, wxt: true },
+    component: () => import(/*webpackChunkName: "loveprofit" */ '../views/loveprofit.vue')
+  },
+  {
+    //电销详细
+    path: '/salesDetailed',
+    name: 'salesDetailed',
+    meta: { requiresAuth: true, wxt: true },
+    component: () => import(/*webpackChunkName: "salesDetailed" */ '../views/salesDetailed.vue')
   }
 
 ];

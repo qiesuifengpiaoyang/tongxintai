@@ -66,31 +66,39 @@
     </div>
     <div class="per-list">
       <van-grid :column-num="5" :border="false">
-        <van-grid-item icon="balance-pay" text="代金券" @click="couponcl" />
         <van-grid-item
-          icon="cart-circle-o"
-          text="购物卡"
+          icon="cash-back-record"
+          text="我的钱包"
+          @click="show = !show"
+        />
+        <van-grid-item
+          icon="balance-list-o"
+          text="绑定支付"
+          @click="bd = !bd"
+        />
+        <van-grid-item icon="balance-pay" text="优惠券" @click="couponcl" />
+        <!-- cart-circle-o -->
+        <van-grid-item
+          icon="balance-pay"
+          text="消费积分"
           @click="goGiftCARDS"
         />
+        <van-grid-item icon="like-o" text="爱心积分" to="loveprofit" />
         <van-grid-item icon="location-o" text="收货地址" @click="addressescl" />
         <van-grid-item icon="bag-o" text="我的拼单" @click="bagocal" />
         <!-- <van-grid-item icon="setting-o" text="设置" /> -->
 
         <van-grid-item icon="chat-o" text="互帮中心" to="helpCenter" />
         <van-grid-item icon="user-o" text="实名认证" to="userInfo" />
-        <van-grid-item icon="idcard" text="绑定银行卡" to="bindCard" />
+        <!-- <van-grid-item icon="idcard" text="绑定银行卡" to="bindCard" />
         <van-grid-item icon="alipay" text="绑定支付宝" to="bindAlipay" />
-        <van-grid-item icon="wechat" text="绑定微信" to="bindWeChat" />
-        <van-grid-item
-          icon="cash-back-record"
-          text="我的收益"
-          @click="show = !show"
-        />
-        <van-grid-item
+        <van-grid-item icon="wechat" text="绑定微信" to="bindWeChat" /> -->
+
+        <!-- <van-grid-item
           icon="balance-pay"
           text="我的钱包"
           @click="toBalancelog"
-        />
+        /> -->
         <!-- <van-grid-item icon="friends-o" text="我的好友" /> -->
       </van-grid>
     </div>
@@ -107,7 +115,12 @@
       /> -->
       <van-cell icon="friends-o" title="我的好友" is-link to="myfriend" />
       <!-- <van-cell icon="chat-o" title="互帮中心" is-link to="helpCenter" /> -->
-      <van-cell icon="comment-circle-o" title="联系我们" is-link to="contactus" />
+      <van-cell
+        icon="comment-circle-o"
+        title="联系我们"
+        is-link
+        to="contactus"
+      />
       <!-- <van-cell icon="gold-coin-o" title="收款方式" is-link  to="payment"/> -->
       <!-- <van-cell icon="orders-o" title="付款列表" is-link to="paylist"/>隐藏 -->
       <!-- <van-cell icon="orders-o" title="收款列表" is-link to="collist"/> -->
@@ -121,6 +134,7 @@
         is-link
         @click="urlBtn"
       />
+      <van-cell icon="location-o" title="收货地址" is-link to="addresses" />
       <van-cell
         class="fzwx"
         icon="phone-circle-o"
@@ -128,16 +142,24 @@
         is-link
         @click="wx"
       />
-      <van-cell icon="location-o" title="收货地址" is-link to="addresses" />
     </div>
     <div class="exit-btn" @click="logout">退出登录</div>
     <Footer :isActive="isActive" @click="onhrefFn" />
+    <!-- 我的钱包 -->
     <van-action-sheet
       v-model="show"
       :actions="actions"
       cancel-text="取消"
       close-on-click-action
       @select="onSelect"
+    />
+    <!-- 绑定支付 -->
+    <van-action-sheet
+      v-model="bd"
+      :actions="bds"
+      cancel-text="取消"
+      close-on-click-action
+      @select="onbd"
     />
     <popup></popup>
     <!-- <p class="records" @click="referenceBtn">蜀ICP备20018437号-1</p> -->
@@ -158,6 +180,13 @@ export default {
       actions: [
         { name: "销售提现", id: 1, url: "memWal" },
         { name: "互帮提现", id: 2, url: "memWal" },
+        { name: "电销提现", id: 3, url: "memWal" },
+      ],
+      bd: false,
+      bds: [
+        { name: "绑定银行卡", id: 1, url: "memWal" },
+        { name: "绑定支付宝", id: 2, url: "memWal" },
+        { name: "绑定微信", id: 3, url: "memWal" },
       ],
       username: sessionStorage.getItem("name"),
       title: sessionStorage.getItem("title"),
@@ -228,7 +257,6 @@ export default {
           window.location.href = "weixin://";
         });
       });
-      
     },
     //备案号
     // referenceBtn() {
@@ -256,9 +284,9 @@ export default {
       }
     },
     //我的钱包————余额
-    toBalancelog() {
-      window.location.href = `${this.url}balancelog`;
-    },
+    // toBalancelog() {
+    //   window.location.href = `${this.url}balancelog`;
+    // },
     //我的订单
     goToRoders(n) {
       // this.$router.push({
@@ -296,15 +324,46 @@ export default {
     onhrefFn(n) {
       this.$router.push(n.url);
     },
+    //我的钱包
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
-
+      // if (item.id === 3) {
+      //   this.show = false;
+      //   window.location.href = `${this.url}balancelog`;
+      // } else {
+      //   this.$router.push({
+      //     name: item.url,
+      //     params: { id: item.id },
+      //   });
+      // }
       this.$router.push({
-        name: item.url,
-        params: { id: item.id },
-      });
+          name: item.url,
+          params: { id: item.id },
+        });
       this.show = false;
+    },
+    // 绑定支付
+    onbd(item) {
+      this.show = false;
+      if (item.id === 1) {
+        this.$router.push({
+          name: "bindCard",
+        });
+        return;
+      }
+      if (item.id === 2) {
+        this.$router.push({
+          name: "bindAlipay",
+        });
+        return;
+      }
+      if (item.id === 3) {
+        this.$router.push({
+          name: "bindWeChat",
+        });
+        return;
+      }
     },
     myEarnCl() {
       this.show = !this.show;
