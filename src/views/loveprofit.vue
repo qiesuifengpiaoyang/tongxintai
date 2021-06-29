@@ -31,7 +31,7 @@
             <p>{{ item.remark }}</p>
             <p>{{ item.create_time }}</p>
           </div>
-          <div>{{ item.status ? "-" : "+" }}{{ item.card }}</div>
+          <div>{{ item.status == 0 ? "+" : "-" }}{{ item.money }}</div>
         </li>
       </ul>
       <van-empty description="暂无记录" v-if="emptyshow" />
@@ -84,7 +84,7 @@ export default {
           let { data } = res;
           let { info, status, message } = data;
           if (status === 1) {
-            this.title = `爱心积分(余额:${info.sum_card})`;
+            this.title = `爱心积分(余额:${info.sum_point})`;
             if (info.data.length < 10) {
               that.finished = true;
             }

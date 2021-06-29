@@ -210,7 +210,7 @@ export default {
       show: false,
       qtx: false,
       dhysjf: false,
-      radio: "",
+      radio: "1",
       isclick: false,
       apiUrl: this.$store.state.apiDomain,
       //比例
@@ -341,26 +341,31 @@ export default {
         forbidClick: true,
         duration: 0,
       });
-      let url = "";
-      // if (+that.$route.params.id === 2) {
-      //   url = `${this.apiUrl}/applyEhelpWithdrawal`;
-      // } else {
-      //   url = `${this.apiUrl}/applySaleWithdrawal`;
-      // }
+      // let url = "";
+      let module = ''
+      // // if (+that.$route.params.id === 2) {
+      // //   url = `${this.apiUrl}/applyEhelpWithdrawal`;
+      // // } else {
+      // //   url = `${this.apiUrl}/applySaleWithdrawal`;
+      // // }
       if (that.poinshow == 1) {
-        url = `${this.apiUrl}/applySaleWithdrawal`;
+        module = ''
+        // url = `${this.apiUrl}/applySaleWithdrawal`;
       } else if (that.poinshow == 2) {
-        url = `${this.apiUrl}/applyEhelpWithdrawal`;
+        module = 'ehelp';
+        // url = `${this.apiUrl}/applyEhelpWithdrawal`;
       } else if (that.poinshow == 3) {
-        url = `${this.apiUrl}/applyEhelpWithdrawal`;
+        module = 'shopping';
+        // url = `${this.apiUrl}/applyEhelpWithdrawal`;
       }
       axios
         .post(
-          url,
+          `${this.apiUrl}/applyEhelpWithdrawal`,
           qs.stringify({
             money: that.money,
             type: that.radio,
             smscode: that.sms,
+            module:module
           })
         )
         .then((res) => {

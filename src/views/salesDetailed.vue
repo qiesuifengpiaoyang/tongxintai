@@ -1,5 +1,5 @@
 <template>
-<!-- 电销详情 -->
+  <!-- 电销详情 -->
   <div class="box">
     <van-nav-bar
       :title="title"
@@ -31,7 +31,7 @@
             <p>{{ item.remark }}</p>
             <p>{{ item.create_time }}</p>
           </div>
-          <div>{{ item.status ? "-" : "+" }}{{ item.card }}</div>
+          <div>{{ item.type == 1 ? "+" : "-" }}{{ item.money }}</div>
         </li>
       </ul>
       <van-empty description="暂无记录" v-if="emptyshow" />
@@ -52,7 +52,7 @@ export default {
       loading: false,
       finished: false,
       page: 0,
-      title:'',
+      title: `电销收益(余额:${sessionStorage.getItem("balance")})`,
       apiUrl: this.$store.state.apiDomain,
       //   limit: 20,
     };
@@ -74,25 +74,34 @@ export default {
       let that = this;
       that.page = that.page + 1;
       axios
-        .get(`${this.apiUrl}/getbalancelog`, {
-          params: {
-            page: that.page,
-          },
+        .post(`${this.apiUrl}/balance/log`, {
+          // params: {
+          //   page: that.page,
+          // },
         })
         .then((res) => {
           console.log(res.data.info.data);
           let { data } = res;
           let { info, status, message } = data;
           if (status === 1) {
-              this.title = `电销详情(余额:${info.sum_card})`;
-            if (info.data.length < 10) {
+            // this.title = `电销详情(余额:${info.sum_card})`;
+            // if (info.data.length < 10) {
+            //   that.finished = true;
+            // }
+            // if (info.data.length === 0 && that.page === 1) {
+            //   that.emptyshow = true;
+            // }
+            // if (info.data.length > 0) {
+            //   that.list = that.list.concat(...info.data);
+            // }
+            if (info.length < 10) {
               that.finished = true;
             }
-            if (info.data.length === 0 && that.page === 1) {
+            if (info.length === 0 && that.page === 1) {
               that.emptyshow = true;
             }
-            if (info.data.length > 0) {
-              that.list = that.list.concat(...info.data);
+            if (info.length > 0) {
+              that.list = that.list.concat(...info);
             }
           } else {
             that.$toast(`${message}`);

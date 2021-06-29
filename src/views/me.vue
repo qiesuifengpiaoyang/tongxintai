@@ -71,11 +71,6 @@
           text="我的钱包"
           @click="show = !show"
         />
-        <van-grid-item
-          icon="balance-list-o"
-          text="绑定支付"
-          @click="bd = !bd"
-        />
         <van-grid-item icon="balance-pay" text="优惠券" @click="couponcl" />
         <!-- cart-circle-o -->
         <van-grid-item
@@ -90,6 +85,11 @@
 
         <van-grid-item icon="chat-o" text="互帮中心" to="helpCenter" />
         <van-grid-item icon="user-o" text="实名认证" to="userInfo" />
+        <van-grid-item
+          icon="balance-list-o"
+          text="绑定支付"
+          @click="bd = !bd"
+        />
         <!-- <van-grid-item icon="idcard" text="绑定银行卡" to="bindCard" />
         <van-grid-item icon="alipay" text="绑定支付宝" to="bindAlipay" />
         <van-grid-item icon="wechat" text="绑定微信" to="bindWeChat" /> -->

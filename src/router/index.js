@@ -518,6 +518,7 @@ router.beforeEach((to, from, next) => {
           sessionStorage.setItem("available_amount", data.info.available_amount);
           sessionStorage.setItem("id", data.info.id);
           sessionStorage.setItem('icon_url', data.info.icon_url);
+          sessionStorage.setItem("balance", data.info.balance);//电销详情里的总余额
           if (data.info.msg) {
             sessionStorage.setItem("msg", data.info.msg);//msg
           } else {
