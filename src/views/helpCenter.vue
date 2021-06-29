@@ -110,7 +110,8 @@ export default {
       if (n === 1) {
         this.$router.push("/myplanlist");
       } else if (n === 2) {
-        this.$router.push("/helpApply");
+        // this.$router.push("/helpApply");
+        this.$router.push("/help");
       } else if (n === 3) {
         this.$router.push("/applyhelp");
       } else if (n === 4) {

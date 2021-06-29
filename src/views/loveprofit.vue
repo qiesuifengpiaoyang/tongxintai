@@ -84,7 +84,7 @@ export default {
           let { data } = res;
           let { info, status, message } = data;
           if (status === 1) {
-            this.title = `爱心积分(余额:${info.sum_point})`;
+            this.title = `爱心积分(贡献值:${info.sum_point})`;
             if (info.data.length < 10) {
               that.finished = true;
             }

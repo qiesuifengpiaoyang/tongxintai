@@ -43,7 +43,9 @@
                     </van-collapse-item>
                 </van-collapse>
                 <div class="contactus-foo">
-                    <p>客服微信：19160572276</p>
+                    <p>市场客服：19160572276（微信同步）</p>
+                    <p>电商客服：18011680349（微信同步）</p>
+                    <p>互帮客服：xxxxxxxxxxx（微信同步）</p>
                 </div>
         </div>
 

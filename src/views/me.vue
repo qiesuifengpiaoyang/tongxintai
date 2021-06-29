@@ -22,7 +22,7 @@
         </div>
         <div @click="toMemWal(1)">
           <p>{{ extent_point == "undefined" ? 0 : extent_point }}</p>
-          <button>推广积分</button>
+          <button>原始积分</button>
         </div>
       </div>
     </div>
@@ -66,6 +66,7 @@
     </div>
     <div class="per-list">
       <van-grid :column-num="5" :border="false">
+        <!-- <van-grid-item icon="chat-o" text="互帮中心" to="helpCenter" /> -->
         <van-grid-item
           icon="cash-back-record"
           text="我的钱包"
@@ -81,9 +82,6 @@
         <van-grid-item icon="like-o" text="爱心积分" to="loveprofit" />
         <van-grid-item icon="location-o" text="收货地址" @click="addressescl" />
         <van-grid-item icon="bag-o" text="我的拼单" @click="bagocal" />
-        <!-- <van-grid-item icon="setting-o" text="设置" /> -->
-
-        <van-grid-item icon="chat-o" text="互帮中心" to="helpCenter" />
         <van-grid-item icon="user-o" text="实名认证" to="userInfo" />
         <van-grid-item
           icon="balance-list-o"
@@ -102,6 +100,13 @@
         <!-- <van-grid-item icon="friends-o" text="我的好友" /> -->
       </van-grid>
     </div>
+    <div class="per-list">
+      <van-grid :column-num="5" :border="false">
+        <van-grid-item icon="friends-o" text="我的好友" to="myfriend" />
+        <van-grid-item icon="comment-circle-o" text="联系我们" to="contactus" />
+        <van-grid-item icon="phone-circle-o" text="客服聊天" @click="urlBtn" />
+      </van-grid>
+    </div>
     <div class="me-list">
       <!-- <van-cell icon="user-o" title="实名认证" is-link to="userInfo" />
       <van-cell icon="idcard" title="绑定银行卡" is-link to="bindCard" />
@@ -113,14 +118,14 @@
         is-link
         @click="myEarnCl"
       /> -->
-      <van-cell icon="friends-o" title="我的好友" is-link to="myfriend" />
+      <!-- <van-cell icon="friends-o" title="我的好友" is-link to="myfriend" /> -->
       <!-- <van-cell icon="chat-o" title="互帮中心" is-link to="helpCenter" /> -->
-      <van-cell
+      <!-- <van-cell
         icon="comment-circle-o"
         title="联系我们"
         is-link
         to="contactus"
-      />
+      /> -->
       <!-- <van-cell icon="gold-coin-o" title="收款方式" is-link  to="payment"/> -->
       <!-- <van-cell icon="orders-o" title="付款列表" is-link to="paylist"/>隐藏 -->
       <!-- <van-cell icon="orders-o" title="收款列表" is-link to="collist"/> -->
@@ -128,20 +133,19 @@
       <!-- <van-cell icon="friends-o" title="消费代理商" is-link to="myTeam" /> -->
       <!-- <van-cell icon="phone-circle-o" title="客服聊天" is-link to="chat" /> --><!--废弃-->
 
-      <van-cell
+      <!-- <van-cell
         icon="phone-circle-o"
         title="客服聊天"
         is-link
         @click="urlBtn"
-      />
-      <van-cell icon="location-o" title="收货地址" is-link to="addresses" />
-      <van-cell
+      /> -->
+      <!-- <van-cell
         class="fzwx"
         icon="phone-circle-o"
         title="电商客服：18011680349（微信同步）"
         is-link
         @click="wx"
-      />
+      /> -->
     </div>
     <div class="exit-btn" @click="logout">退出登录</div>
     <Footer :isActive="isActive" @click="onhrefFn" />

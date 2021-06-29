@@ -24,7 +24,7 @@
         >
         <!-- v-if="poinshow"【销售提现】中展示/【互帮提现】中隐藏【推广积分】和【兑换原始积分】 -->
         <!-- v-if="hbtx" 用来控制【互帮提现】中只展示一个【推广积分】还是都展示 -->
-        <div @click.stop="dhysjfBtn" class="dhysjf" v-if="poinshow != 3">
+        <div @click.stop="dhysjfBtn" class="dhysjf" v-if="poinshow == 1">
           兑换原始积分
         </div>
         <!-- <van-button color="#ed6a0c" icon="gold-coin" plain type="primary" @click="chsycl">查看收益</van-button> -->
@@ -342,20 +342,20 @@ export default {
         duration: 0,
       });
       // let url = "";
-      let module = ''
+      let module = "";
       // // if (+that.$route.params.id === 2) {
       // //   url = `${this.apiUrl}/applyEhelpWithdrawal`;
       // // } else {
       // //   url = `${this.apiUrl}/applySaleWithdrawal`;
       // // }
       if (that.poinshow == 1) {
-        module = ''
+        module = "";
         // url = `${this.apiUrl}/applySaleWithdrawal`;
       } else if (that.poinshow == 2) {
-        module = 'ehelp';
+        module = "ehelp";
         // url = `${this.apiUrl}/applyEhelpWithdrawal`;
       } else if (that.poinshow == 3) {
-        module = 'shopping';
+        module = "shopping";
         // url = `${this.apiUrl}/applyEhelpWithdrawal`;
       }
       axios
@@ -365,7 +365,7 @@ export default {
             money: that.money,
             type: that.radio,
             smscode: that.sms,
-            module:module
+            module: module,
           })
         )
         .then((res) => {

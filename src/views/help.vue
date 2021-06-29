@@ -1,6 +1,13 @@
 <template>
   <div class="help-wrapper">
-    <van-nav-bar class="navbar" :border="false" title="相互帮助" />
+    <!-- <van-nav-bar class="navbar" :border="false" title="相互帮助" /> -->
+    <van-nav-bar
+      class="navbar"
+      :border="false"
+      title="相互帮助"
+      left-arrow
+      @click-left="onarrowLeftClick"
+    />
     <div v-if="pageshow">
       <ul class="topay-list" v-if="list.length > 0">
         <li v-for="(item, index) in list" :key="index" @click="helpFn(item)">
@@ -71,7 +78,7 @@ export default {
           toast1.clear();
         });
     },
-    onClickLeft() {
+    onarrowLeftClick(e) {
       this.$router.go(-1);
     },
   },
@@ -105,7 +112,7 @@ export default {
         right: 0.1rem;
         // background: #35bffd;
         // background-image: linear-gradient( 135deg, #3C8CE7 10%, #00EAFF 100%);
-        background-image: linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%);
+        background-image: linear-gradient(135deg, #5efce8 10%, #736efe 100%);
         padding: 5px 10px 4px;
         color: #fff;
         border-radius: 5px;
